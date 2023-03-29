@@ -1,0 +1,36 @@
+<root main_tree_to_execute="navigation_tree">
+  <BehaviorTree ID="navigation_tree">
+    <Sequence name="NavigateToWaypoints">
+      <NavigateToWaypoint position="10, 10" orientation="0, 0, 0"/>
+      <NavigateToWaypoint position="20, 20" orientation="0, 0, 1.57"/>
+      <NavigateToWaypoint position="30, 30" orientation="0, 0, 0"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="task_tree">
+    <Fallback name="TaskPriority">
+      <Sequence>
+        <DoTask1/>
+        <DoTask2/>
+      </Sequence>
+      <DoTask3/>
+    </Fallback>
+  </BehaviorTree>
+  
+  <BehaviorTree ID="navigation_with_obstacle_tree">
+    <Fallback name="AvoidObstacle">
+      <Sequence>
+        <NavigateToWaypoint position="10, 10" orientation="0, 0, 0"/>
+        <DetectObstacle range="2" threshold="0.5"/>
+      </Sequence>
+      <Sequence>
+        <TurnLeft angle="30"/>
+        <NavigateToWaypoint position="10, 10" orientation="0, 0, 0"/>
+      </Sequence>
+      <Sequence>
+        <TurnRight angle="30"/>
+        <NavigateToWaypoint position="10, 10" orientation="0, 0, 0"/>
+      </Sequence>
+    </Fallback>
+  </BehaviorTree>
+</root>
