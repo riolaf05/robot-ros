@@ -1,0 +1,29 @@
+running egg_info
+creating build/robot_ros/robot_ros.egg-info
+writing build/robot_ros/robot_ros.egg-info/PKG-INFO
+writing dependency_links to build/robot_ros/robot_ros.egg-info/dependency_links.txt
+writing entry points to build/robot_ros/robot_ros.egg-info/entry_points.txt
+writing requirements to build/robot_ros/robot_ros.egg-info/requires.txt
+writing top-level names to build/robot_ros/robot_ros.egg-info/top_level.txt
+writing manifest file 'build/robot_ros/robot_ros.egg-info/SOURCES.txt'
+reading manifest file 'build/robot_ros/robot_ros.egg-info/SOURCES.txt'
+writing manifest file 'build/robot_ros/robot_ros.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/rosario/robot-ros/build/robot_ros/build
+creating /home/rosario/robot-ros/build/robot_ros/build/lib
+creating /home/rosario/robot-ros/build/robot_ros/build/lib/robot_ros
+copying robot_ros/__init__.py -> /home/rosario/robot-ros/build/robot_ros/build/lib/robot_ros
+copying robot_ros/navbehaviourtree.py -> /home/rosario/robot-ros/build/robot_ros/build/lib/robot_ros
+running install
+running install_lib
+creating /home/rosario/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros
+copying /home/rosario/robot-ros/build/robot_ros/build/lib/robot_ros/__init__.py -> /home/rosario/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros
+copying /home/rosario/robot-ros/build/robot_ros/build/lib/robot_ros/navbehaviourtree.py -> /home/rosario/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros
+byte-compiling /home/rosario/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros/__init__.py to __init__.cpython-38.pyc
+byte-compiling /home/rosario/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros/navbehaviourtree.py to navbehaviourtree.cpython-38.pyc
+running install_data
+creating /home/rosario/robot-ros/install/robot_ros/share/ament_index
+creating /home/rosario/robot-ros/install/robot_ros/share/ament_index/resource_index
+creating /home/rosario/robot-ros/install/robot_ros/share/ament_index/resource_index/packages
+error: can't copy 'resource/robot_ros': doesn't exist or not a regular file

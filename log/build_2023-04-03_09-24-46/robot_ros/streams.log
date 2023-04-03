@@ -1,0 +1,53 @@
+[0.656s] Invoking command in '/home/rosario/robot-ros': PYTHONPATH=/home/rosario/robot-ros/build/robot_ros/prefix_override:/home/rosario/robot-ros/install/robot_ros/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base build/robot_ros build --build-base /home/rosario/robot-ros/build/robot_ros/build install --record /home/rosario/robot-ros/build/robot_ros/install.log --install-scripts $base/lib/robot_ros --single-version-externally-managed
+[0.870s] running egg_info
+[0.871s] writing build/robot_ros/robot_ros.egg-info/PKG-INFO
+[0.871s] writing dependency_links to build/robot_ros/robot_ros.egg-info/dependency_links.txt
+[0.871s] writing entry points to build/robot_ros/robot_ros.egg-info/entry_points.txt
+[0.871s] writing requirements to build/robot_ros/robot_ros.egg-info/requires.txt
+[0.872s] writing top-level names to build/robot_ros/robot_ros.egg-info/top_level.txt
+[0.905s] reading manifest file 'build/robot_ros/robot_ros.egg-info/SOURCES.txt'
+[0.906s] writing manifest file 'build/robot_ros/robot_ros.egg-info/SOURCES.txt'
+[0.906s] running build
+[0.907s] running build_py
+[0.907s] running install
+[0.908s] running install_lib
+[0.910s] running install_data
+[0.910s] copying package.xml -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros
+[0.911s] creating /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch
+[0.911s] copying launch/test_mobile_robot_1.launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch
+[0.911s] copying launch/camera.launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch
+[0.911s] copying launch/test_mobile_robot_0.launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch
+[0.911s] copying launch/launch_sim.launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch
+[0.911s] copying launch/lidar.launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch
+[0.912s] copying launch/my_script_launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch
+[0.912s] copying launch/surveillance_bot.launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch
+[0.912s] copying launch/launch_robot.launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch
+[0.912s] copying launch/rsp.launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch
+[0.912s] creating /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description
+[0.912s] copying description/gazebo_control.xacro -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description
+[0.913s] copying description/lidar.xacro -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description
+[0.913s] copying description/robot.urdf.xacro -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description
+[0.913s] copying description/camera.xacro -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description
+[0.913s] copying description/ros2_control.xacro -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description
+[0.913s] copying description/robot_core.xacro -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description
+[0.913s] copying description/inertial_macros.xacro -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description
+[0.914s] creating /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description/config
+[0.914s] copying description/config/my_controllers.yaml -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description/config
+[0.914s] creating /home/rosario/robot-ros/install/robot_ros/share/robot_ros/worlds
+[0.914s] copying worlds/walls.world -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/worlds
+[0.914s] copying worlds/test_wold_1.world -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/worlds
+[0.914s] creating /home/rosario/robot-ros/install/robot_ros/share/robot_ros/rviz
+[0.914s] copying rviz/rviz_config.rviz -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/rviz
+[0.915s] creating /home/rosario/robot-ros/install/robot_ros/share/robot_ros/maps
+[0.915s] copying maps/costmap_common_params.yaml -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/maps
+[0.915s] copying maps/base_local_planner_params.yaml -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/maps
+[0.915s] copying maps/local_costmap_params.yaml -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/maps
+[0.915s] copying maps/global_costmap_params.yaml -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/maps
+[0.915s] creating /home/rosario/robot-ros/install/robot_ros/share/robot_ros/bt
+[0.915s] copying bt/navigation_tree.xml -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/bt
+[0.915s] running install_egg_info
+[0.917s] Copying build/robot_ros/robot_ros.egg-info to /home/rosario/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros-0.0.0-py3.8.egg-info
+[0.918s] running install_scripts
+[0.936s] Installing nav_behaviour_tree script to /home/rosario/robot-ros/install/robot_ros/lib/robot_ros
+[0.937s] writing list of installed files to '/home/rosario/robot-ros/build/robot_ros/install.log'
+[0.961s] Invoked command in '/home/rosario/robot-ros' returned '0': PYTHONPATH=/home/rosario/robot-ros/build/robot_ros/prefix_override:/home/rosario/robot-ros/install/robot_ros/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base build/robot_ros build --build-base /home/rosario/robot-ros/build/robot_ros/build install --record /home/rosario/robot-ros/build/robot_ros/install.log --install-scripts $base/lib/robot_ros --single-version-externally-managed

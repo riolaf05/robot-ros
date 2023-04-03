@@ -1,0 +1,67 @@
+[0.000000] (-) TimerEvent: {}
+[0.000543] (robot_ros) JobQueued: {'identifier': 'robot_ros', 'dependencies': OrderedDict()}
+[0.000617] (robot_ros) JobStarted: {'identifier': 'robot_ros'}
+[0.099520] (-) TimerEvent: {}
+[0.199956] (-) TimerEvent: {}
+[0.300308] (-) TimerEvent: {}
+[0.400735] (-) TimerEvent: {}
+[0.500975] (-) TimerEvent: {}
+[0.601259] (-) TimerEvent: {}
+[0.651957] (robot_ros) Command: {'cmd': ['/usr/bin/python3', 'setup.py', 'egg_info', '--egg-base', 'build/robot_ros', 'build', '--build-base', '/home/rosario/robot-ros/build/robot_ros/build', 'install', '--record', '/home/rosario/robot-ros/build/robot_ros/install.log', '--install-scripts', '$base/lib/robot_ros', '--single-version-externally-managed'], 'cwd': '/home/rosario/robot-ros', 'env': {'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'rosario', 'SSH_AGENT_PID': '1487', 'XDG_SESSION_TYPE': 'x11', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/home/rosario/ros2_foxy/ros2-linux/opt/yaml_cpp_vendor/lib:/home/rosario/ros2_foxy/ros2-linux/opt/rviz_ogre_vendor/lib:/home/rosario/ros2_foxy/ros2-linux/lib:/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib', 'HOME': '/home/rosario', 'OLDPWD': '/home/rosario', 'DESKTOP_SESSION': 'ubuntu', 'GIO_LAUNCHED_DESKTOP_FILE': '/usr/share/applications/terminator.desktop', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'MANAGERPID': '1309', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'TERMINATOR_DBUS_NAME': 'net.tenshu.Terminator21a9d5db22c73a993ff0b42f64b396873', 'GIO_LAUNCHED_DESKTOP_FILE_PID': '4111', 'IM_CONFIG_PHASE': '1', 'COLCON_PREFIX_PATH': '/home/rosario/robot-development/install:/home/rosario/ros2_foxy/ros2-linux', 'ROS_DISTRO': 'foxy', 'LOGNAME': 'rosario', 'JOURNAL_STREAM': '8:44600', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'PKG_CONFIG_PATH': '/home/rosario/ros2_foxy/ros2-linux/lib/x86_64-linux-gnu/pkgconfig:/home/rosario/ros2_foxy/ros2-linux/lib/pkgconfig', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'rosario', 'TERM': 'xterm-256color', 'GAZEBO_MODEL_PATH': ':/home/rosario/robot-development/src/behaviour_trees/models', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'ROS_LOCALHOST_ONLY': '0', 'WINDOWPATH': '2', 'PATH': '/home/rosario/ros2_foxy/ros2-linux/bin:/opt/ros/foxy/bin:/home/rosario/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin', 'SESSION_MANAGER': 'local/rosario-Latitude-5490:@/tmp/.ICE-unix/1525,unix/rosario-Latitude-5490:/tmp/.ICE-unix/1525', 'INVOCATION_ID': 'c4b7e20af0844f98ba3ca9c053f27adf', 'XDG_MENU_PREFIX': 'gnome-', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'TERMINATOR_DBUS_PATH': '/net/tenshu/Terminator2', 'LANG': 'it_IT.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/gdm/Xauthority', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/home/rosario/robot-development/install/urdf_tutorial:/home/rosario/robot-development/install/my_bot_test:/home/rosario/robot-development/install/my_bot:/home/rosario/robot-development/install/behaviour_trees:/home/rosario/ros2_foxy/ros2-linux:/opt/ros/foxy', 'SHELL': '/bin/bash', 'TERMINATOR_UUID': 'urn:uuid:46c51b87-524b-4855-9133-527de32b3b19', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'GPG_AGENT_INFO': '/run/user/1000/gnupg/S.gpg-agent:0:1', 'GJS_DEBUG_OUTPUT': 'stderr', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/rosario/robot-ros/build/robot_ros', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/rosario/robot-ros/build/robot_ros/prefix_override:/home/rosario/robot-ros/install/robot_ros/lib/python3.8/site-packages:/home/rosario/robot-development/install/urdf_tutorial/lib/python3.8/site-packages:/home/rosario/robot-development/install/my_bot_test/lib/python3.8/site-packages:/home/rosario/robot-development/install/my_bot/lib/python3.8/site-packages:/home/rosario/robot-development/install/behaviour_trees/lib/python3.8/site-packages:/home/rosario/ros2_foxy/ros2-linux/lib/python3.8/site-packages:/opt/ros/foxy/lib/python3.8/site-packages', 'COLCON': '1', 'VTE_VERSION': '6003', 'ROS_WORKSPACE': 'robot-development', 'CMAKE_PREFIX_PATH': '/home/rosario/ros2_foxy/ros2-linux'}, 'shell': False}
+[0.701380] (-) TimerEvent: {}
+[0.801721] (-) TimerEvent: {}
+[0.870646] (robot_ros) StdoutLine: {'line': b'running egg_info\n'}
+[0.871408] (robot_ros) StdoutLine: {'line': b'writing build/robot_ros/robot_ros.egg-info/PKG-INFO\n'}
+[0.871640] (robot_ros) StdoutLine: {'line': b'writing dependency_links to build/robot_ros/robot_ros.egg-info/dependency_links.txt\n'}
+[0.871818] (robot_ros) StdoutLine: {'line': b'writing entry points to build/robot_ros/robot_ros.egg-info/entry_points.txt\n'}
+[0.871970] (robot_ros) StdoutLine: {'line': b'writing requirements to build/robot_ros/robot_ros.egg-info/requires.txt\n'}
+[0.872112] (robot_ros) StdoutLine: {'line': b'writing top-level names to build/robot_ros/robot_ros.egg-info/top_level.txt\n'}
+[0.901837] (-) TimerEvent: {}
+[0.905758] (robot_ros) StdoutLine: {'line': b"reading manifest file 'build/robot_ros/robot_ros.egg-info/SOURCES.txt'\n"}
+[0.906802] (robot_ros) StdoutLine: {'line': b"writing manifest file 'build/robot_ros/robot_ros.egg-info/SOURCES.txt'\n"}
+[0.907034] (robot_ros) StdoutLine: {'line': b'running build\n'}
+[0.907159] (robot_ros) StdoutLine: {'line': b'running build_py\n'}
+[0.907304] (robot_ros) StdoutLine: {'line': b'running install\n'}
+[0.908341] (robot_ros) StdoutLine: {'line': b'running install_lib\n'}
+[0.910271] (robot_ros) StdoutLine: {'line': b'running install_data\n'}
+[0.910810] (robot_ros) StdoutLine: {'line': b'copying package.xml -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros\n'}
+[0.911025] (robot_ros) StdoutLine: {'line': b'creating /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch\n'}
+[0.911234] (robot_ros) StdoutLine: {'line': b'copying launch/test_mobile_robot_1.launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch\n'}
+[0.911404] (robot_ros) StdoutLine: {'line': b'copying launch/camera.launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch\n'}
+[0.911586] (robot_ros) StdoutLine: {'line': b'copying launch/test_mobile_robot_0.launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch\n'}
+[0.911750] (robot_ros) StdoutLine: {'line': b'copying launch/launch_sim.launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch\n'}
+[0.911920] (robot_ros) StdoutLine: {'line': b'copying launch/lidar.launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch\n'}
+[0.912075] (robot_ros) StdoutLine: {'line': b'copying launch/my_script_launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch\n'}
+[0.912270] (robot_ros) StdoutLine: {'line': b'copying launch/surveillance_bot.launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch\n'}
+[0.912400] (robot_ros) StdoutLine: {'line': b'copying launch/launch_robot.launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch\n'}
+[0.912513] (robot_ros) StdoutLine: {'line': b'copying launch/rsp.launch.py -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/launch\n'}
+[0.912707] (robot_ros) StdoutLine: {'line': b'creating /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description\n'}
+[0.912893] (robot_ros) StdoutLine: {'line': b'copying description/gazebo_control.xacro -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description\n'}
+[0.913060] (robot_ros) StdoutLine: {'line': b'copying description/lidar.xacro -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description\n'}
+[0.913212] (robot_ros) StdoutLine: {'line': b'copying description/robot.urdf.xacro -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description\n'}
+[0.913399] (robot_ros) StdoutLine: {'line': b'copying description/camera.xacro -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description\n'}
+[0.913555] (robot_ros) StdoutLine: {'line': b'copying description/ros2_control.xacro -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description\n'}
+[0.913720] (robot_ros) StdoutLine: {'line': b'copying description/robot_core.xacro -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description\n'}
+[0.913882] (robot_ros) StdoutLine: {'line': b'copying description/inertial_macros.xacro -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description\n'}
+[0.914056] (robot_ros) StdoutLine: {'line': b'creating /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description/config\n'}
+[0.914209] (robot_ros) StdoutLine: {'line': b'copying description/config/my_controllers.yaml -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/description/config\n'}
+[0.914366] (robot_ros) StdoutLine: {'line': b'creating /home/rosario/robot-ros/install/robot_ros/share/robot_ros/worlds\n'}
+[0.914541] (robot_ros) StdoutLine: {'line': b'copying worlds/walls.world -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/worlds\n'}
+[0.914699] (robot_ros) StdoutLine: {'line': b'copying worlds/test_wold_1.world -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/worlds\n'}
+[0.914859] (robot_ros) StdoutLine: {'line': b'creating /home/rosario/robot-ros/install/robot_ros/share/robot_ros/rviz\n'}
+[0.915018] (robot_ros) StdoutLine: {'line': b'copying rviz/rviz_config.rviz -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/rviz\n'}
+[0.915123] (robot_ros) StdoutLine: {'line': b'creating /home/rosario/robot-ros/install/robot_ros/share/robot_ros/maps\n'}
+[0.915242] (robot_ros) StdoutLine: {'line': b'copying maps/costmap_common_params.yaml -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/maps\n'}
+[0.915362] (robot_ros) StdoutLine: {'line': b'copying maps/base_local_planner_params.yaml -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/maps\n'}
+[0.915485] (robot_ros) StdoutLine: {'line': b'copying maps/local_costmap_params.yaml -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/maps\n'}
+[0.915603] (robot_ros) StdoutLine: {'line': b'copying maps/global_costmap_params.yaml -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/maps\n'}
+[0.915705] (robot_ros) StdoutLine: {'line': b'creating /home/rosario/robot-ros/install/robot_ros/share/robot_ros/bt\n'}
+[0.915815] (robot_ros) StdoutLine: {'line': b'copying bt/navigation_tree.xml -> /home/rosario/robot-ros/install/robot_ros/share/robot_ros/bt\n'}
+[0.915938] (robot_ros) StdoutLine: {'line': b'running install_egg_info\n'}
+[0.917440] (robot_ros) StdoutLine: {'line': b'Copying build/robot_ros/robot_ros.egg-info to /home/rosario/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros-0.0.0-py3.8.egg-info\n'}
+[0.918386] (robot_ros) StdoutLine: {'line': b'running install_scripts\n'}
+[0.936872] (robot_ros) StdoutLine: {'line': b'Installing nav_behaviour_tree script to /home/rosario/robot-ros/install/robot_ros/lib/robot_ros\n'}
+[0.937174] (robot_ros) StdoutLine: {'line': b"writing list of installed files to '/home/rosario/robot-ros/build/robot_ros/install.log'\n"}
+[0.961429] (robot_ros) CommandEnded: {'returncode': 0}
+[0.982897] (robot_ros) JobEnded: {'identifier': 'robot_ros', 'rc': 0}
+[0.984041] (-) EventReactorShutdown: {}
