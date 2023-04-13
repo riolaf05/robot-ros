@@ -28,6 +28,9 @@
 /home/rosario/robot-ros/install/robot_ros/share/robot_ros/maps/local_costmap_params.yaml
 /home/rosario/robot-ros/install/robot_ros/share/robot_ros/maps/global_costmap_params.yaml
 /home/rosario/robot-ros/install/robot_ros/share/robot_ros/bt/navigation_tree.xml
+/home/rosario/robot-ros/install/robot_ros/share/robot_ros/config/mapper.yaml
+/home/rosario/robot-ros/install/robot_ros/share/robot_ros/config/eks.yaml
+/home/rosario/robot-ros/install/robot_ros/share/robot_ros/config/nav2_params.yaml
 /home/rosario/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros-0.0.0-py3.8.egg-info/requires.txt
 /home/rosario/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros-0.0.0-py3.8.egg-info/entry_points.txt
 /home/rosario/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros-0.0.0-py3.8.egg-info/top_level.txt

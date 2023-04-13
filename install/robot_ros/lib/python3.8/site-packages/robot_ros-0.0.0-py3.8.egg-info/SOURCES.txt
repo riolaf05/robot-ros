@@ -10,6 +10,9 @@ build/robot_ros/robot_ros.egg-info/entry_points.txt
 build/robot_ros/robot_ros.egg-info/requires.txt
 build/robot_ros/robot_ros.egg-info/top_level.txt
 build/robot_ros/robot_ros.egg-info/zip-safe
+config/eks.yaml
+config/mapper.yaml
+config/nav2_params.yaml
 description/camera.xacro
 description/gazebo_control.xacro
 description/inertial_macros.xacro

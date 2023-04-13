@@ -15,12 +15,12 @@ from functools import partial
 class NavBehaviorTree(Node):
 
     def __init__(self):
-        super().__init__('nav_behavior_tree')
+        super().__init__('nav_robot_ros')
 
         # Parse the behavior tree attributes
-        package_name='my_bot_test'
+        package_name='robot_ros'
         pkg_share = FindPackageShare(package=package_name).find(package_name)
-        self.tree = TreeAttributeParser(os.path.join(pkg_share, 'behavior_trees', 'navigation_tree.xml'))
+        self.tree = TreeAttributeParser(os.path.join(pkg_share, 'robot_ros', 'navigation_tree.xml'))
         self.current_goal_index = 0
 
         # Create a publisher to send goal poses
@@ -78,7 +78,7 @@ class NavBehaviorTree(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    nav_behavior_tree = NavBehaviorTree()
-    rclpy.spin(nav_behavior_tree)
-    nav_behavior_tree.shutdown()
+    nav_robot_ros = NavBehaviorTree()
+    rclpy.spin(nav_robot_ros)
+    nav_robot_ros.shutdown()
     rclpy.shutdown()

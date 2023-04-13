@@ -20,8 +20,8 @@ def generate_launch_description():
     nav2_dir = FindPackageShare(package='nav2_bringup').find('nav2_bringup')
     nav2_launch_dir = os.path.join(nav2_dir, 'launch')
     nav2_bt_path = FindPackageShare(package='nav2_bt_navigator').find('nav2_bt_navigator')
-    nav2_params_path = os.path.join(pkg_share, 'params', 'nav2_params.yaml')
-    behavior_tree_xml_path = os.path.join(nav2_bt_path, 'behavior_trees', 'navigate_w_replanning_and_recovery.xml')
+    nav2_params_path = os.path.join(pkg_share, 'config', 'nav2_params.yaml')
+    behavior_tree_xml_path = os.path.join(nav2_bt_path, 'robot_ros', 'navigate_w_replanning_and_recovery.xml')
     static_map_path = os.path.join(pkg_share, 'maps', 'map.yaml')
     
     # Launch configuration variables specific to simulation
@@ -148,7 +148,7 @@ def generate_launch_description():
     
     # Launch the ROS 2 Navigation Stack
     start_ros2_navigation_cmd = IncludeLaunchDescription(
-    PythonLaunchDescriptionSource(os.path.join(nav2_launch_dir, 'bringup_launch.py')), #TODO questo launch file crasha dopo il lancio!!!
+    PythonLaunchDescriptionSource(os.path.join(nav2_launch_dir, 'bringup_launch.py')), 
     launch_arguments = {'namespace': namespace,
                         'use_namespace': use_namespace,
                         'slam': slam,
@@ -159,6 +159,15 @@ def generate_launch_description():
                         'autostart': autostart}.items()
     )
 
+    start_slam_toolbox_node = Node(
+        parameters=[
+          get_package_share_directory("robot_ros") + '/config/mapper.yaml',
+          {'use_sim_time': use_sim_time}
+        ],
+        package='slam_toolbox',
+        node_executable='sync_slam_toolbox_node',
+        name='slam_toolbox',
+        output='screen')
 
     # Launch them all!
     ld = LaunchDescription()
@@ -172,11 +181,14 @@ def generate_launch_description():
     ld.add_action(declare_autostart_cmd) 
     ld.add_action(declare_world_cmd) 
     ld.add_action(declare_slam_cmd)
-    ld.add_action(rsp)
-    ld.add_action(gazebo)
-    ld.add_action(spawn_entity)
-    #ld.add_action(rqt_robot_steering_node)
-    ld.add_action(rviz_node)
-    ld.add_action(start_ros2_navigation_cmd)
+
+    # Launch nodes
+    ld.add_action(rsp) #launch file con robot description
+    # ld.add_action(gazebo) #attiva gazebo
+    # ld.add_action(spawn_entity) #spawna il robot in gazebo
+    #ld.add_action(rqt_robot_steering_node) #per muovere il robot
+    # ld.add_action(rviz_node) #attiva rviz
+    # ld.add_action(start_ros2_navigation_cmd) #attiva il navigation stack
+    ld.add_action(start_slam_toolbox_node) #attiva il slam_toolbox
     return ld
 
