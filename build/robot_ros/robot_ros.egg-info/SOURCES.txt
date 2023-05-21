@@ -21,7 +21,6 @@ description/robot.urdf.xacro
 description/robot_core.xacro
 description/ros2_control.xacro
 description/config/my_controllers.yaml
-launch/camera.launch.py
 launch/launch_robot.launch.py
 launch/launch_sim.launch.py
 launch/lidar.launch.py
