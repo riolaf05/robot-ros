@@ -34,6 +34,7 @@ maps/base_local_planner_params.yaml
 maps/costmap_common_params.yaml
 maps/global_costmap_params.yaml
 maps/local_costmap_params.yaml
+robot_ros/GPIO_test.py
 robot_ros/__init__.py
 robot_ros/cmd_to_pwm_driver.py
 robot_ros/model_test.py

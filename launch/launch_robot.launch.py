@@ -23,6 +23,18 @@ def generate_launch_description():
         output='screen',
         parameters=[] #robot_state_publisher richiede il file URDF
     )
+    
+    #Camera
+    camera_node = Node(
+        package='v4l2_camera',
+        executable='v4l2_camera_node',
+        output='screen',
+        parameters=[{
+           #'image_size': [640,480],
+           #'camera_frame_id': 'camera_link_optical'
+           'video_device': '/dev/video0'
+            }]
+    )
 
     #Controller manager: 
     #Unfortunately the controller manager can’t just read it from 
@@ -44,6 +56,7 @@ def generate_launch_description():
     return LaunchDescription([
         rsp,
         hdw_interface,
+        camera_node,
         # controller_manager
     ])
 
