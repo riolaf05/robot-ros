@@ -7,7 +7,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
-    package_name='robot' 
+    package_name='robot_ros' 
   
     #“Include” our own rsp.launch.py, from our package, and force use_sim_time to be true
     rsp = IncludeLaunchDescription(
@@ -18,7 +18,7 @@ def generate_launch_description():
 
     #Hardware interface
     hdw_interface = Node(
-        package='robot',
+        package='robot_ros',
         executable='cmdVel_to_pwm_node',
         output='screen',
         parameters=[] #robot_state_publisher richiede il file URDF
