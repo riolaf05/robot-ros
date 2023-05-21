@@ -1,0 +1,33 @@
+[2.605s] Invoking command in '/home/ubuntu/robot-ros': PYTHONPATH=/home/ubuntu/robot-ros/build/robot_ros/prefix_override:/home/ubuntu/robot-ros/install/robot_ros/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base build/robot_ros build --build-base /home/ubuntu/robot-ros/build/robot_ros/build install --record /home/ubuntu/robot-ros/build/robot_ros/install.log --install-scripts $base/lib/robot_ros --single-version-externally-managed
+[3.704s] running egg_info
+[3.706s] writing build/robot_ros/robot_ros.egg-info/PKG-INFO
+[3.708s] writing dependency_links to build/robot_ros/robot_ros.egg-info/dependency_links.txt
+[3.708s] writing entry points to build/robot_ros/robot_ros.egg-info/entry_points.txt
+[3.709s] writing requirements to build/robot_ros/robot_ros.egg-info/requires.txt
+[3.710s] writing top-level names to build/robot_ros/robot_ros.egg-info/top_level.txt
+[3.845s] reading manifest file 'build/robot_ros/robot_ros.egg-info/SOURCES.txt'
+[3.850s] writing manifest file 'build/robot_ros/robot_ros.egg-info/SOURCES.txt'
+[3.850s] running build
+[3.851s] running build_py
+[3.851s] copying robot_ros/publisher_member_function.py -> /home/ubuntu/robot-ros/build/robot_ros/build/lib/robot_ros
+[3.852s] copying robot_ros/cmd_to_pwm_driver.py -> /home/ubuntu/robot-ros/build/robot_ros/build/lib/robot_ros
+[3.853s] copying robot_ros/surveillance_bot.py -> /home/ubuntu/robot-ros/build/robot_ros/build/lib/robot_ros
+[3.854s] copying robot_ros/model_test.py -> /home/ubuntu/robot-ros/build/robot_ros/build/lib/robot_ros
+[3.855s] running install
+[3.859s] running install_lib
+[3.862s] copying /home/ubuntu/robot-ros/build/robot_ros/build/lib/robot_ros/publisher_member_function.py -> /home/ubuntu/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros
+[3.863s] copying /home/ubuntu/robot-ros/build/robot_ros/build/lib/robot_ros/cmd_to_pwm_driver.py -> /home/ubuntu/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros
+[3.864s] copying /home/ubuntu/robot-ros/build/robot_ros/build/lib/robot_ros/surveillance_bot.py -> /home/ubuntu/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros
+[3.867s] copying /home/ubuntu/robot-ros/build/robot_ros/build/lib/robot_ros/model_test.py -> /home/ubuntu/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros
+[3.871s] byte-compiling /home/ubuntu/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros/publisher_member_function.py to publisher_member_function.cpython-38.pyc
+[3.876s] byte-compiling /home/ubuntu/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros/cmd_to_pwm_driver.py to cmd_to_pwm_driver.cpython-38.pyc
+[3.879s] byte-compiling /home/ubuntu/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros/surveillance_bot.py to surveillance_bot.cpython-38.pyc
+[3.881s] byte-compiling /home/ubuntu/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros/model_test.py to model_test.cpython-38.pyc
+[3.883s] running install_data
+[3.889s] running install_egg_info
+[3.895s] removing '/home/ubuntu/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros-0.0.0-py3.8.egg-info' (and everything under it)
+[3.896s] Copying build/robot_ros/robot_ros.egg-info to /home/ubuntu/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros-0.0.0-py3.8.egg-info
+[3.900s] running install_scripts
+[3.971s] Installing nav_behaviour_tree script to /home/ubuntu/robot-ros/install/robot_ros/lib/robot_ros
+[3.971s] writing list of installed files to '/home/ubuntu/robot-ros/build/robot_ros/install.log'
+[4.080s] Invoked command in '/home/ubuntu/robot-ros' returned '0': PYTHONPATH=/home/ubuntu/robot-ros/build/robot_ros/prefix_override:/home/ubuntu/robot-ros/install/robot_ros/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base build/robot_ros build --build-base /home/ubuntu/robot-ros/build/robot_ros/build install --record /home/ubuntu/robot-ros/build/robot_ros/install.log --install-scripts $base/lib/robot_ros --single-version-externally-managed

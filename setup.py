@@ -30,6 +30,8 @@ setup(
     entry_points={
         'console_scripts': [
             'nav_behaviour_tree = robot_ros.nav_behaviour_tree:main',
+            'talker = robot_ros.publisher_member_function:main',
+            'cmdVel_to_pwm_node = robot_ros.cmd_to_pwm_driver:main',
         ],
     },
 )

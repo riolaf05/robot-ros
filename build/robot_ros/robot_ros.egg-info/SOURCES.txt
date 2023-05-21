@@ -35,7 +35,11 @@ maps/costmap_common_params.yaml
 maps/global_costmap_params.yaml
 maps/local_costmap_params.yaml
 robot_ros/__init__.py
+robot_ros/cmd_to_pwm_driver.py
+robot_ros/model_test.py
 robot_ros/navbehaviourtree.py
+robot_ros/publisher_member_function.py
+robot_ros/surveillance_bot.py
 rviz/rviz_config.rviz
 test/test_copyright.py
 test/test_flake8.py
