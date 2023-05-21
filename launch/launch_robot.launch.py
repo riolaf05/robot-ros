@@ -7,11 +7,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
-
-    # Include the robot_state_publisher launch file, provided by our own package. Force sim time to be enabled
-    # !!! MAKE SURE YOU SET THE PACKAGE NAME CORRECTLY !!!
-
-    package_name='my_bot_test' 
+    package_name='robot' 
   
     #“Include” our own rsp.launch.py, from our package, and force use_sim_time to be true
     rsp = IncludeLaunchDescription(
@@ -22,7 +18,7 @@ def generate_launch_description():
 
     #Hardware interface
     hdw_interface = Node(
-        package='my_bot_test',
+        package='robot',
         executable='cmdVel_to_pwm_node',
         output='screen',
         parameters=[] #robot_state_publisher richiede il file URDF
