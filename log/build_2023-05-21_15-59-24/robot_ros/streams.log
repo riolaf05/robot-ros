@@ -1,0 +1,23 @@
+[0.707s] Invoking command in '/home/rosario/robot-ros': PYTHONPATH=/home/rosario/robot-ros/build/robot_ros/prefix_override:/home/rosario/robot-ros/install/robot_ros/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base build/robot_ros build --build-base /home/rosario/robot-ros/build/robot_ros/build install --record /home/rosario/robot-ros/build/robot_ros/install.log --install-scripts $base/lib/robot_ros --single-version-externally-managed
+[0.921s] running egg_info
+[0.921s] writing build/robot_ros/robot_ros.egg-info/PKG-INFO
+[0.922s] writing dependency_links to build/robot_ros/robot_ros.egg-info/dependency_links.txt
+[0.922s] writing entry points to build/robot_ros/robot_ros.egg-info/entry_points.txt
+[0.922s] writing requirements to build/robot_ros/robot_ros.egg-info/requires.txt
+[0.922s] writing top-level names to build/robot_ros/robot_ros.egg-info/top_level.txt
+[0.957s] reading manifest file 'build/robot_ros/robot_ros.egg-info/SOURCES.txt'
+[0.958s] writing manifest file 'build/robot_ros/robot_ros.egg-info/SOURCES.txt'
+[0.959s] running build
+[0.959s] running build_py
+[0.959s] running install
+[0.960s] running install_lib
+[0.962s] running install_data
+[0.963s] running install_egg_info
+[0.965s] removing '/home/rosario/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros-0.0.0-py3.8.egg-info' (and everything under it)
+[0.965s] Copying build/robot_ros/robot_ros.egg-info to /home/rosario/robot-ros/install/robot_ros/lib/python3.8/site-packages/robot_ros-0.0.0-py3.8.egg-info
+[0.966s] running install_scripts
+[0.982s] Installing cmdVel_to_pwm_node script to /home/rosario/robot-ros/install/robot_ros/lib/robot_ros
+[0.982s] Installing nav_behaviour_tree script to /home/rosario/robot-ros/install/robot_ros/lib/robot_ros
+[0.983s] Installing talker script to /home/rosario/robot-ros/install/robot_ros/lib/robot_ros
+[0.983s] writing list of installed files to '/home/rosario/robot-ros/build/robot_ros/install.log'
+[1.013s] Invoked command in '/home/rosario/robot-ros' returned '0': PYTHONPATH=/home/rosario/robot-ros/build/robot_ros/prefix_override:/home/rosario/robot-ros/install/robot_ros/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base build/robot_ros build --build-base /home/rosario/robot-ros/build/robot_ros/build install --record /home/rosario/robot-ros/build/robot_ros/install.log --install-scripts $base/lib/robot_ros --single-version-externally-managed
