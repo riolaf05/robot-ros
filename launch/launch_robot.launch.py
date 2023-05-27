@@ -67,7 +67,7 @@ def generate_launch_description():
         rsp,
         hdw_interface,
         camera_node,
-        # rosbridge_node
+        rosbridge_node
         # controller_manager
     ])
 
