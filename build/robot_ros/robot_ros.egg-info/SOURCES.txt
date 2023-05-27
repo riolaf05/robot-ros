@@ -24,7 +24,6 @@ description/config/my_controllers.yaml
 launch/launch_robot.launch.py
 launch/launch_sim.launch.py
 launch/lidar.launch.py
-launch/my_script_launch.py
 launch/rsp.launch.py
 launch/surveillance_bot.launch.py
 launch/test_mobile_robot_0.launch.py

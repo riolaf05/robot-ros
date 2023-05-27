@@ -36,6 +36,16 @@ def generate_launch_description():
             }]
     )
 
+    #Rosbridge
+    rosbridge_node = Node(
+        package='rosbridge_server',
+        executable='rosbridge_websocket',
+        output='screen',
+        parameters=[{
+            'port': 9090
+            }]
+    )
+
     #Controller manager: 
     #Unfortunately the controller manager can’t just read it from 
     #the /robot_description topic the way the gazebo_ros2_control plugin does
@@ -57,6 +67,7 @@ def generate_launch_description():
         rsp,
         hdw_interface,
         camera_node,
+        rosbridge_node
         # controller_manager
     ])
 
