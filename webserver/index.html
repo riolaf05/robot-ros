@@ -94,6 +94,12 @@
     }
     window.onload = function () {
       createJoystick();
+
+      image_listener = new ROSLIB.Topic({ros : ros,name : '/image_raw/compressed',messageType : 'sensor_msgs/CompressedImage'});
+      image_listener.subscribe(function(message) {
+        console.log('Received message on ' + image_listener.name);
+        document.getElementById('image_sub').src = "data:image/jpeg;base64," + message.data;
+      });
     }
 
   </script>
@@ -104,6 +110,7 @@
   <p>Connection status: <span id="status"></span></p>
   <p>Last message on /txt_msg: <span id="msg"></span></p>
   <div id="zone_joystick" style="position: relative;"></div>
+  <img style="transform: rotate(180deg)" id="image_sub" />
 </body>
 
 </html>
