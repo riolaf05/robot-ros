@@ -21,11 +21,9 @@ description/robot.urdf.xacro
 description/robot_core.xacro
 description/ros2_control.xacro
 description/config/my_controllers.yaml
-launch/camera.launch.py
 launch/launch_robot.launch.py
 launch/launch_sim.launch.py
 launch/lidar.launch.py
-launch/my_script_launch.py
 launch/rsp.launch.py
 launch/surveillance_bot.launch.py
 launch/test_mobile_robot_0.launch.py
@@ -34,8 +32,13 @@ maps/base_local_planner_params.yaml
 maps/costmap_common_params.yaml
 maps/global_costmap_params.yaml
 maps/local_costmap_params.yaml
+robot_ros/GPIO_test.py
 robot_ros/__init__.py
+robot_ros/cmd_to_pwm_driver.py
+robot_ros/model_test.py
 robot_ros/navbehaviourtree.py
+robot_ros/publisher_member_function.py
+robot_ros/surveillance_bot.py
 rviz/rviz_config.rviz
 test/test_copyright.py
 test/test_flake8.py
