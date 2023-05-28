@@ -7,7 +7,11 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
-    package_name='robot_ros' 
+
+    # Include the robot_state_publisher launch file, provided by our own package. Force sim time to be enabled
+    # !!! MAKE SURE YOU SET THE PACKAGE NAME CORRECTLY !!!
+
+    package_name='my_bot_test' 
   
     #“Include” our own rsp.launch.py, from our package, and force use_sim_time to be true
     rsp = IncludeLaunchDescription(
@@ -18,32 +22,10 @@ def generate_launch_description():
 
     #Hardware interface
     hdw_interface = Node(
-        package='robot_ros',
+        package='my_bot_test',
         executable='cmdVel_to_pwm_node',
         output='screen',
         parameters=[] #robot_state_publisher richiede il file URDF
-    )
-    
-    #Camera
-    camera_node = Node(
-        package='v4l2_camera',
-        executable='v4l2_camera_node',
-        output='screen',
-        parameters=[{
-           #'image_size': [640,480],
-           #'camera_frame_id': 'camera_link_optical'
-           'video_device': '/dev/video0'
-            }]
-    )
-
-    #Rosbridge
-    rosbridge_node = Node(
-        package='rosbridge_server',
-        executable='rosbridge_websocket',
-        output='screen',
-        parameters=[{
-            'port': 9090
-            }]
     )
 
     #Controller manager: 
@@ -66,8 +48,6 @@ def generate_launch_description():
     return LaunchDescription([
         rsp,
         hdw_interface,
-        camera_node,
-        rosbridge_node
         # controller_manager
     ])
 
