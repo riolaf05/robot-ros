@@ -1,3 +1,0 @@
-[console_scripts]
-nav_behaviour_tree = robot_ros.nav_behaviour_tree:main
-
