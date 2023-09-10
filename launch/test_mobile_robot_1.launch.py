@@ -187,8 +187,8 @@ def generate_launch_description():
     # ld.add_action(gazebo) #attiva gazebo
     # ld.add_action(spawn_entity) #spawna il robot in gazebo
     #ld.add_action(rqt_robot_steering_node) #per muovere il robot
-    # ld.add_action(rviz_node) #attiva rviz
+    ld.add_action(rviz_node) #attiva rviz
     # ld.add_action(start_ros2_navigation_cmd) #attiva il navigation stack
-    ld.add_action(start_slam_toolbox_node) #attiva il slam_toolbox
+    # ld.add_action(start_slam_toolbox_node) #attiva il slam_toolbox
     return ld
 
