@@ -16,7 +16,7 @@ def generate_launch_description():
     package_name='robot_ros' 
     pkg_share = FindPackageShare(package=package_name).find(package_name)
     default_rviz_config_path = os.path.join(pkg_share, 'rviz/rviz_config.rviz')
-    default_world_path = os.path.join(pkg_share, 'worlds/walls.world')
+    default_world_path = os.path.join(pkg_share, 'worlds/my_house_v1.world')
     nav2_dir = FindPackageShare(package='nav2_bringup').find('nav2_bringup')
     nav2_launch_dir = os.path.join(nav2_dir, 'launch')
     nav2_bt_path = FindPackageShare(package='nav2_bt_navigator').find('nav2_bt_navigator')
@@ -184,10 +184,10 @@ def generate_launch_description():
 
     # Launch nodes
     ld.add_action(rsp) #launch file con robot description
-    # ld.add_action(gazebo) #attiva gazebo
-    # ld.add_action(spawn_entity) #spawna il robot in gazebo
+    ld.add_action(gazebo) #attiva gazebo
+    ld.add_action(spawn_entity) #spawna il robot in gazebo
     #ld.add_action(rqt_robot_steering_node) #per muovere il robot
-    ld.add_action(rviz_node) #attiva rviz
+    # ld.add_action(rviz_node) #attiva rviz
     # ld.add_action(start_ros2_navigation_cmd) #attiva il navigation stack
     # ld.add_action(start_slam_toolbox_node) #attiva il slam_toolbox
     return ld
