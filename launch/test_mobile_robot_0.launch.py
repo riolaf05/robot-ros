@@ -61,6 +61,7 @@ def generate_launch_description():
     )
     
     robot_localization_node = Node(
+        #this is to publish odom -> base_link
          package='robot_localization',
          executable='ekf_node', #applica il kalman filter
          name='ekf_filter_node',
@@ -75,7 +76,7 @@ def generate_launch_description():
 
     # Add any actions
     ld.add_action(start_robot_state_publisher_cmd)
-    ld.add_action(start_joint_state_publisher_cmd)
+    # ld.add_action(start_joint_state_publisher_cmd)
     ld.add_action(robot_localization_node)
     #ld.add_action(start_joint_state_publisher_gui_node)
     #ld.add_action(static_tf_publisher)
