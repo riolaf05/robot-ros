@@ -79,11 +79,11 @@ def generate_launch_description():
         description='Full path to the behavior tree xml file to use'
     )
 
-    declare_map_yaml_cmd = DeclareLaunchArgument(
-        name='map',
-        default_value=default_world_path,
-        description='Full path to map file to load'
-    )
+    # declare_map_yaml_cmd = DeclareLaunchArgument(
+    #     name='map',
+    #     default_value=default_world_path,
+    #     description='Full path to map file to load'
+    # )
 
     declare_slam_cmd = DeclareLaunchArgument(
         name='slam',
@@ -152,7 +152,7 @@ def generate_launch_description():
     launch_arguments = {'namespace': namespace,
                         'use_namespace': use_namespace,
                         'slam': slam,
-                        'map': map_yaml_file,
+                        # 'map': map_yaml_file,
                         'use_sim_time': use_sim_time,
                         'params_file': params_file,
                         'default_bt_xml_filename': default_bt_xml_filename,
@@ -175,11 +175,11 @@ def generate_launch_description():
     ld.add_action(declare_namespace_cmd)
     ld.add_action(declare_use_namespace_cmd)
     ld.add_action(declare_params_file_cmd)
-    ld.add_action(declare_map_yaml_cmd)
+    # ld.add_action(declare_map_yaml_cmd)
     ld.add_action(declare_bt_xml_cmd)
     ld.add_action(declare_rviz_config_file_cmd)
     ld.add_action(declare_autostart_cmd) 
-    ld.add_action(declare_world_cmd) 
+    # ld.add_action(declare_world_cmd) 
     ld.add_action(declare_slam_cmd)
 
     # Launch nodes
