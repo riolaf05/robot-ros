@@ -3,6 +3,18 @@ Repository con il codice per la creazione di un robot tramite framework ROS2 (Fo
 
 ## Install 
 
+### Setup pacchetti
+
+Per navigazione
+```console
+sudo apt install -y ros-foxy-navigation2 ros-foxy-nav2-bringup
+```
+
+Per simulazione con Turtlebot
+```console
+sudo apt install -y ros-foxy-turtlebot3*
+```
+
 ### Simulazione
 
 1. robot state publisher
@@ -65,6 +77,11 @@ ros2 run tf2_tools view_frames.py
 Tastiera da console
 ```console
 ros2 run turtlebot3_teleop teleop_keyboard
+```
+
+SLAM per turtlebot3
+```console
+ros2 launch turtlebot3_cartographer cartographer.launch.py use_sime_time:=True
 ```
 
 # References 
