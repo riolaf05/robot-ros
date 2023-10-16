@@ -16,7 +16,7 @@ ros2 launch robot_ros test_mobile_robot_1.launch.py
 4. **Nav2** (serve per settare punti di arrivo e partenza e generare il percorso, necessita di `/map` e `/odom`), `/odom` è generato dal nodo `diff_drive` (simulato in Gazebo) che serve per fare l'odometria, cioè la stima della posizione del robot dati i comandi di movimento che gli sono stati dati (su `/cmd_vel`)
 
 ```console
-ros2 launch nav2_bringup navigation_launch.py use_sim_time:=True
+ros2 launch nav2_bringup navigation_launch.py use_sim_time:=True map:=maps/my_map_1
 ```
 TODO: integrarlo nel launch file
 
