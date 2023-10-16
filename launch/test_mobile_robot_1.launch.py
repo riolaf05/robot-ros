@@ -172,22 +172,22 @@ def generate_launch_description():
     # Launch them all!
     ld = LaunchDescription()
     ld.add_action(declare_use_sim_time_cmd)
-    ld.add_action(declare_namespace_cmd)
-    ld.add_action(declare_use_namespace_cmd)
-    ld.add_action(declare_params_file_cmd)
+    # ld.add_action(declare_namespace_cmd)
+    # ld.add_action(declare_use_namespace_cmd)
+    # ld.add_action(declare_params_file_cmd)
     # ld.add_action(declare_map_yaml_cmd)
-    ld.add_action(declare_bt_xml_cmd)
+    # ld.add_action(declare_bt_xml_cmd)
     ld.add_action(declare_rviz_config_file_cmd)
-    ld.add_action(declare_autostart_cmd) 
-    # ld.add_action(declare_world_cmd) 
-    ld.add_action(declare_slam_cmd)
+    # ld.add_action(declare_autostart_cmd) 
+    ld.add_action(declare_world_cmd) 
+    # ld.add_action(declare_slam_cmd)
 
     # Launch nodes
     ld.add_action(rsp) #launch file con robot description
     ld.add_action(gazebo) #attiva gazebo
     ld.add_action(spawn_entity) #spawna il robot in gazebo
     #ld.add_action(rqt_robot_steering_node) #per muovere il robot
-    # ld.add_action(rviz_node) #attiva rviz
+    ld.add_action(rviz_node) #attiva rviz
     # ld.add_action(start_ros2_navigation_cmd) #attiva il navigation stack
     # ld.add_action(start_slam_toolbox_node) #attiva il slam_toolbox
     return ld
