@@ -79,3 +79,6 @@ ros2 run turtlebot3_teleop teleop_keyboard
 
 * [How to visualise ROS images in html?](https://parkerrobert.medium.com/how-to-visualise-ros-images-in-html-c6b88e37e985)
 
+### Batteria Raspberry
+
+* [PiSugar](https://www.amazon.it/dp/B09QRPNDHB?psc=1&ref=ppx_yo2ov_dt_b_product_details)
