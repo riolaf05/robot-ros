@@ -6,17 +6,27 @@ Repository con il codice per la creazione di un robot tramite framework ROS2 (Fo
 ```console
 
 sudo apt install libraspberrypi-bin v4l-utils ros-${ROS_DISTRO}-v4l2-camera ros-${ROS_DISTRO}-image-transport-plugins ros-${ROS_DISTRO}-camera-calibration-parsers ros-${ROS_DISTRO}-camera-info-manager ros-${ROS_DISTRO}-launch-testing-ament-cmake
+
 sudo apt install ros-${ROS_DISTRO}-rosbridge-server ros-${ROS_DISTRO}-rosbridge-suite
+
 sudo apt install ros-${ROS_DISTRO}-slam-toolbox
 
 sudo apt install python3-pip -y
+
 pip install RPi.GPIO xacro
-sudo apt install rpi.gpio-common ros-${ROS_DISTRO}-gazebo-ros-pkgs ros-${ROS_DISTRO}-rviz2 python3-roslaunch ros-${ROS_DISTRO}-rqt-image-view
+
+sudo apt install rpi.gpio-common ros-${ROS_DISTRO}-gazebo-ros-pkgs ros-${ROS_DISTRO}-rviz2 
+
+python3-roslaunch ros-${ROS_DISTRO}-rqt-image-view
+
 cd ~
+
 git clone https://github.com/riolaf05/robot-ros
 
 cd robot-ros
+
 colcon build
+
 source install/setup.bash
 ```
 
