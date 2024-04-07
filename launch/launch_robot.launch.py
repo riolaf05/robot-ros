@@ -16,12 +16,22 @@ def generate_launch_description():
                 )]), launch_arguments={'use_sim_time': 'false'}.items()
     )
 
-    #Hardware interface
+    #Hardware interface (custom)
     hdw_interface = Node(
         package='robot_ros',
         executable='cmdVel_to_pwm_node',
         output='screen',
-        parameters=[] #robot_state_publisher richiede il file URDF
+        parameters=[] 
+    )
+
+    #Motor controller (custom) <- #FIXME does not works!!
+    #Used to accept messages from higher level software, 
+    # such as the navigation stack, and convert it into signals that drive the motors. 
+    hdw_interface = Node(
+        package='robot_ros',
+        executable='motor_controller_custom_node',
+        output='screen',
+        parameters=[] 
     )
     
     #Camera

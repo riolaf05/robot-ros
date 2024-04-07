@@ -1,18 +1,16 @@
 # robot-ros
 Repository con il codice per la creazione di un robot tramite framework ROS
 
-## Install 
+## Lanciare per il robot su Raspberry:
 
-Lancuare test_mobile_robot_1.launch.py per la simulazione 
+```console
+ros2 launch robot_ros launch_robot.launch.py
+ros2 launch nav2_bringup navigation_launch.py use_sim_time:=False
+ros2 launch slam_toolbox online_async_launch.py use_sim_time:=False
+```
 
-Lanciare launch_robot.launch.py per il robot su Raspberry
+Per vedere l'albero dei frames:
 
-## Launch ROS bridge 
-
-ros2 launch rosbridge_server rosbridge_websocket_launch.xml
-
-# References
-
-* [ROS web tutorial part 1 - rosbridge server and roslibjs](https://msadowski.github.io/ros-web-tutorial-pt1/)
-
-* [How to visualise ROS images in html?](https://parkerrobert.medium.com/how-to-visualise-ros-images-in-html-c6b88e37e985)
+```console
+os2 run tf2_tools view_frames
+```

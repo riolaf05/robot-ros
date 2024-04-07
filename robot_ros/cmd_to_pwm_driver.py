@@ -7,7 +7,9 @@ from geometry_msgs.msg import Twist #vedi con 'ros2 interface show geometry_msgs
 
 class VelocitySubscriber(Node):
     '''
-    Riceve la velocità dai topic
+    Implementa l'hardware interface in un nodo ros
+    Utile per utilizzare un bridge L298N con Raspberry
+    Riceve la velocità sotto forma di msg Twist dai topic cmd_vel
     La converte in impulsi PWM per il motor driver 
     '''
 
