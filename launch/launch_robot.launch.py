@@ -24,16 +24,14 @@ def generate_launch_description():
         parameters=[] 
     )
 
-    #Motor controller (custom) <- #FIXME does not works!!
-    #Used to accept messages from higher level software, 
-    # such as the navigation stack, and convert it into signals that drive the motors. 
-    hdw_interface = Node(
-        package='robot_ros',
-        executable='motor_controller_custom_node',
-        output='screen',
-        parameters=[] 
-    )
-    
+    # #fake odom publisher
+    # fake_odom_publisher = Node(
+    #     package='robot_ros',
+    #     executable='odom_publisher_node',
+    #     output='screen',
+    #     parameters=[] 
+    # )
+  
     #Camera
     camera_node = Node(
         package='v4l2_camera',
