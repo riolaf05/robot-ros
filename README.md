@@ -12,5 +12,5 @@ ros2 launch slam_toolbox online_async_launch.py use_sim_time:=False
 Per vedere l'albero dei frames:
 
 ```console
-os2 run tf2_tools view_frames
+ros2 run tf2_tools view_frames
 ```
