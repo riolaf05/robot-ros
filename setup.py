@@ -12,7 +12,7 @@ setup(
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name, 'launch'), glob('launch/*launch.py')),
         (os.path.join('share', package_name, 'description'), glob('description/*.xacro')),
-        (os.path.join('share', package_name, 'description'), glob('description/*.urdf')),
+        # (os.path.join('share', package_name, 'description'), glob('description/*.urdf')),
         (os.path.join('share', package_name, 'description', 'config'), glob('description/config/*')),
         #(os.path.join('share', package_name, 'data'), glob('data/*')),
         (os.path.join('share', package_name, 'worlds'), glob('worlds/*')),
@@ -33,6 +33,8 @@ setup(
             'nav_behaviour_tree = robot_ros.nav_behaviour_tree:main',
             'talker = robot_ros.publisher_member_function:main',
             'cmdVel_to_pwm_node = robot_ros.cmd_to_pwm_driver:main',
+            'motor_controller_custom_node = robot_ros.motor_controller_custom:main',
+            'odom_publisher_node = robot_ros.odom_publisher:main'
         ],
     },
 )
