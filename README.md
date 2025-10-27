@@ -117,7 +117,7 @@ sudo apt install python3-colcon-common-extensions
 
 Pacchetti necessari per il funzionamento del robot:
 ```console
-sudo apt install ros-humble-xacro ros-humble-robot-state-publisher
+sudo apt install ros-humble-xacro ros-humble-robot-state-publisher ros-humble-slam-toolbox ros-humble-ros2-control ros-humble-ros2-controllers
 ```
 
 #### 6. Setup dell'ambiente
@@ -182,10 +182,19 @@ colcon build
 source install/setup.bash
 ```
 
+#### Installazione completa dipendenze
+Per installare tutti i pacchetti necessari in una volta:
+```console
+sudo apt install -y ros-humble-xacro ros-humble-robot-state-publisher \
+ros-humble-slam-toolbox ros-humble-navigation2 ros-humble-nav2-bringup \
+ros-humble-teleop-twist-keyboard ros-humble-serial python3-serial \
+ros-humble-ros2-control ros-humble-ros2-controllers
+```
+
 #### Verifica installazione
 Controlla che tutti i pacchetti siano installati:
 ```console
-ros2 pkg list | grep robot_ros
+ros2 pkg list | grep -E "(robot_ros|slam_toolbox|teleop|nav2)"
 ```
 
 ## Descrizione del Progetto
@@ -242,15 +251,18 @@ Viene lanciato attraverso il file `rsp.launch.py` che:
 ### Launch Files
 
 #### `rsp.launch.py`
-- Lancia solo il robot_state_publisher
+- Lancia il robot_state_publisher
 - Processa i file Xacro e genera l'URDF
+- **Include SLAM Toolbox** per mappatura automatica
+- **Include ROS2 Control** con controller manager e differential drive controller
 - Utilizzato come base per altri launch file
 
-#### `launch_robot.launch.py` (Robot Reale)
+#### `launch_robot_cus.launch.py` (Robot Reale con Nodi Custom)
 - **Robot State Publisher**: Per le trasformazioni del robot
 - **Hardware Interface**: Nodo personalizzato per controllo motori (`cmdVel_to_pwm_node`)
 - **Camera Node**: Interfaccia con camera USB via v4l2
 - **Rosbridge**: Server WebSocket per interfaccia web remota
+- **Nodi Accessori**: Include tutti i nodi custom sviluppati e accessori
 
 #### `test_mobile_robot_1.launch.py` (Simulazione)
 - Launch file per simulazione completa in Gazebo
@@ -271,25 +283,26 @@ Prima di lanciare qualsiasi comando, assicurati di:
 
 ### Robot Reale (Raspberry Pi)
 
-#### Lancio Completo del Robot
+#### Lancio Completo del Robot con Nodi Custom
 ```console
-ros2 launch robot_ros launch_robot.launch.py
+ros2 launch robot_ros launch_robot_cus.launch.py
 ```
 Questo comando lancia:
-- Robot State Publisher
+- Robot State Publisher + SLAM Toolbox
 - Hardware interface per controllo motori
 - Nodo camera (v4l2)
 - Rosbridge server per interfaccia web
+- Tutti i nodi custom e accessori
 
-#### Solo Robot State Publisher
+#### Robot State Publisher + SLAM + ROS2 Control
 ```console
 ros2 launch robot_ros rsp.launch.py
 ```
-Lancia solo il robot_state_publisher per pubblicare le trasformazioni del robot.
+Lancia robot_state_publisher + SLAM Toolbox + ROS2 Control per trasformazioni, mappatura automatica e controllo hardware.
 
 #### Con Parametri Personalizzati
 ```console
-ros2 launch robot_ros launch_robot.launch.py use_sim_time:=false
+ros2 launch robot_ros launch_robot_cus.launch.py use_sim_time:=false
 ```
 
 ### Simulazione (Gazebo)
@@ -318,7 +331,7 @@ ros2 launch robot_ros surveillance_bot.launch.py
 ### Controllo Remoto
 
 #### Interfaccia Web
-1. Lancia il robot con rosbridge: `ros2 launch robot_ros launch_robot.launch.py`
+1. Lancia il robot con rosbridge: `ros2 launch robot_ros launch_robot_cus.launch.py`
 2. Apri `webserver/index.html` nel browser (aggiorna l'IP del Raspberry Pi)
 
 #### Controllo da Tastiera
@@ -354,14 +367,24 @@ ros2 run robot_ros talker
 
 ### Setup pacchetti per la navigazione
 
-Per navigazione
+Per navigazione completa:
 ```console
-sudo apt install -y ros-humble-navigation2 ros-humble-nav2-bringup
+sudo apt install -y ros-humble-navigation2 ros-humble-nav2-bringup ros-humble-slam-toolbox
 ```
 
-Per simulazione con Turtlebot
+Per controllo da tastiera:
+```console
+sudo apt install -y ros-humble-teleop-twist-keyboard
+```
+
+Per simulazione con Turtlebot:
 ```console
 sudo apt install -y ros-humble-turtlebot3*
+```
+
+Pacchetti per comunicazione seriale (Arduino):
+```console
+sudo apt install -y ros-humble-serial python3-serial
 ```
 
 ### Dipendenze per Simulazione
