@@ -27,6 +27,47 @@ def generate_launch_description():
     )
 
 
+    # SLAM Toolbox node
+    slam_toolbox_node = Node(
+        package='slam_toolbox',
+        executable='async_slam_toolbox_node',
+        name='slam_toolbox',
+        output='screen',
+        parameters=[{
+            'use_sim_time': use_sim_time,
+            'base_frame': 'base_footprint',
+            'odom_frame': 'odom',
+            'map_frame': 'map',
+            'scan_topic': '/scan',
+            'scan_queue_size': 1,
+            'map_update_interval': 5.0
+        }]
+    )
+
+    # ROS2 Control - Controller Manager
+    controller_manager = Node(
+        package='controller_manager',
+        executable='ros2_control_node',
+        parameters=[params, os.path.join(pkg_path, 'config', 'my_controllers.yaml')],
+        output='screen'
+    )
+
+    # Differential Drive Controller
+    diff_drive_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['diff_cont'],
+        output='screen'
+    )
+
+    # Joint State Broadcaster
+    joint_broad_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_broad'],
+        output='screen'
+    )
+
     # Launch!
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -34,6 +75,10 @@ def generate_launch_description():
             default_value='false',
             description='Use sim time if true'),
 
-        node_robot_state_publisher
+        node_robot_state_publisher,
+        slam_toolbox_node,
+        controller_manager,
+        diff_drive_spawner,
+        joint_broad_spawner
     ])
     
