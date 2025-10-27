@@ -446,6 +446,46 @@ colcon build --packages-select robot_ros
 source install/setup.bash
 ```
 
+## Gestione Versioni e Release
+
+### GitHub Actions Workflow
+
+Il progetto include un workflow automatico (`.github/workflows/release.yml`) che:
+
+#### Trigger
+- Si attiva automaticamente quando viene fatto un push su `master` o `main`
+
+#### Funzionalità
+1. **Creazione Tag Automatica**: Genera un tag con formato `vYYYY.MM.DD`
+2. **Gestione Conflitti**: Se esiste già un tag per la data corrente, aggiunge un suffisso incrementale (es. `v2025.10.27.1`)
+3. **Changelog Automatico**: Genera un changelog con tutti i commit dalla release precedente
+4. **Release GitHub**: Crea una release completa con descrizione e informazioni
+5. **Aggiornamento Versione**: Aggiorna automaticamente il file `package.xml` con la nuova versione
+
+#### Esempio di Tag Generati
+- `v2025.10.27` - Prima release del giorno
+- `v2025.10.27.1` - Seconda release dello stesso giorno
+- `v2025.10.28` - Prima release del giorno successivo
+
+#### Informazioni nella Release
+- Data e ora di creazione
+- Commit hash
+- Lista delle modifiche dalla release precedente
+- Artifact con informazioni di release
+
+#### Permessi Richiesti
+Il workflow richiede i permessi `contents: write` per creare tag e release.
+
+### Release Manuali
+Per creare release manuali:
+```console
+# Crea un tag locale
+git tag -a v1.0.0 -m "Release v1.0.0"
+
+# Push del tag
+git push origin v1.0.0
+```
+
 # References 
 
 ## Ros Navigation
