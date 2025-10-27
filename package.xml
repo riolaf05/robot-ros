@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>robot_ros</name>
-  <version>v2025.10.27.1</version>
+  <version>v2025.10.27.2</version>
   <description>TODO: Package description</description>
   <maintainer email="lafacerosario@gmail.com">rosario</maintainer>
   <license>TODO: License declaration</license>
