@@ -113,7 +113,14 @@ sudo apt install ros-humble-ros-base
 sudo apt install python3-colcon-common-extensions
 ```
 
-#### 5. Setup dell'ambiente
+#### 5. Installazione dipendenze robot
+
+Pacchetti necessari per il funzionamento del robot:
+```console
+sudo apt install ros-humble-xacro ros-humble-robot-state-publisher
+```
+
+#### 6. Setup dell'ambiente
 
 Per configurare automaticamente l'ambiente ROS2 ad ogni sessione:
 ```console
@@ -126,6 +133,60 @@ source ~/.bashrc
 - Il Raspberry Pi 4 con almeno 2GB di RAM è raccomandato per un'esperienza ottimale
 - Per strumenti di visualizzazione come Rviz o Gazebo, considera un setup multi-macchina con il Pi che controlla l'hardware e un computer più potente per la visualizzazione
 - Per installare pacchetti aggiuntivi ROS2, usa il formato: `sudo apt install ros-humble-<nome-pacchetto>`
+
+### Setup del Progetto Robot-ROS
+
+#### 1. Installazione Git
+
+```console
+sudo apt install git
+```
+
+#### 2. Clone del Repository
+
+```console
+cd ~
+git clone https://github.com/riolaf05/robot-ros
+```
+
+#### 3. Compilazione del Workspace
+
+```console
+cd ~/robot-ros
+colcon build
+```
+
+#### 4. Setup Automatico del Workspace
+
+Per configurare automaticamente il workspace ad ogni sessione:
+```console
+echo "source ~/robot-ros/install/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+```
+
+**Nota**: Ora ad ogni nuovo terminale, il workspace robot-ros sarà automaticamente disponibile e potrai utilizzare direttamente i comandi `ros2 launch robot_ros ...`
+
+### Risoluzione Problemi Comuni
+
+#### Errore: "No module named 'xacro'"
+Se ricevi questo errore quando lanci i file launch:
+```console
+sudo apt install ros-humble-xacro ros-humble-robot-state-publisher
+```
+
+#### Errore: "Package 'robot_ros' not found"
+Assicurati di aver compilato e fatto il source del workspace:
+```console
+cd ~/robot-ros
+colcon build
+source install/setup.bash
+```
+
+#### Verifica installazione
+Controlla che tutti i pacchetti siano installati:
+```console
+ros2 pkg list | grep robot_ros
+```
 
 ## Descrizione del Progetto
 
