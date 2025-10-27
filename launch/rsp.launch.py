@@ -44,30 +44,6 @@ def generate_launch_description():
         }]
     )
 
-    # ROS2 Control - Controller Manager
-    controller_manager = Node(
-        package='controller_manager',
-        executable='ros2_control_node',
-        parameters=[os.path.join(pkg_path, 'config', 'my_controllers.yaml'), {'use_sim_time': use_sim_time}],
-        output='screen'
-    )
-
-    # Differential Drive Controller
-    diff_drive_spawner = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['diff_cont'],
-        output='screen'
-    )
-
-    # Joint State Broadcaster
-    joint_broad_spawner = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['joint_broad'],
-        output='screen'
-    )
-
     # Launch!
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -76,9 +52,6 @@ def generate_launch_description():
             description='Use sim time if true'),
 
         node_robot_state_publisher,
-        slam_toolbox_node,
-        controller_manager,
-        diff_drive_spawner,
-        joint_broad_spawner
+        slam_toolbox_node
     ])
     
