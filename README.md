@@ -1,108 +1,503 @@
 # robot-ros
-Repository con il codice per la creazione di un robot tramite framework ROS2 (Foxy)
+Repository con il codice per la creazione di un robot tramite framework ROS2 (Humble)
 
-## Install
+## Wiring 
+
+TODO
+
+## ROS2 Humble Setup su Raspberry Pi
+
+### Prerequisiti: Ubuntu Server 22.04
+
+Prima di tutto è necessario installare Ubuntu Server 22.04 sul Raspberry Pi 4. Utilizziamo Ubuntu Server perché è il sistema operativo più adatto per ROS2 su Raspberry Pi e ROS2 Humble è compatibile specificamente con Ubuntu 22.04.
+
+Usare [Rasbperry PI Imager](https://www.raspberrypi.com/software/) per installare Ubuntu 22.04.
+
+### Setup OpenSSH Server
+
+Dopo l'installazione di Ubuntu Server, è essenziale configurare SSH per l'accesso remoto al Raspberry Pi:
+
+#### 1. Installazione OpenSSH Server
 
 ```console
+sudo apt update
+sudo apt install openssh-server
+```
 
-sudo apt install libraspberrypi-bin v4l-utils ros-${ROS_DISTRO}-v4l2-camera ros-${ROS_DISTRO}-image-transport-plugins ros-${ROS_DISTRO}-camera-calibration-parsers ros-${ROS_DISTRO}-camera-info-manager ros-${ROS_DISTRO}-launch-testing-ament-cmake
+#### 2. Abilitazione e avvio del servizio SSH
 
-sudo apt install ros-${ROS_DISTRO}-rosbridge-server ros-${ROS_DISTRO}-rosbridge-suite
+```console
+# Abilita SSH all'avvio del sistema
+sudo systemctl enable ssh
 
-sudo apt install ros-${ROS_DISTRO}-slam-toolbox
+# Avvia il servizio SSH
+sudo systemctl start ssh
 
-sudo apt install python3-pip -y
+# Verifica lo stato del servizio
+sudo systemctl status ssh
+```
 
-pip install RPi.GPIO xacro
+#### 3. Configurazione del firewall (opzionale)
 
-sudo apt install rpi.gpio-common ros-${ROS_DISTRO}-gazebo-ros-pkgs ros-${ROS_DISTRO}-rviz2 
+Se hai il firewall abilitato, permettere le connessioni SSH:
 
-python3-roslaunch ros-${ROS_DISTRO}-rqt-image-view
+```console
+sudo ufw allow ssh
+sudo ufw enable
+```
 
+#### 4. Configurazione SSH (opzionale)
+
+Per maggiore sicurezza, puoi modificare il file di configurazione SSH:
+
+```console
+sudo nano /etc/ssh/sshd_config
+```
+
+Configurazioni consigliate:
+- Cambiare la porta predefinita (22) se necessario
+- Disabilitare l'accesso root: `PermitRootLogin no`
+- Abilitare l'autenticazione con chiavi pubbliche: `PubkeyAuthentication yes`
+
+Dopo le modifiche, riavviare il servizio:
+```console
+sudo systemctl restart ssh
+```
+
+#### 5. Connessione SSH
+
+Dal computer di sviluppo:
+```console
+ssh username@raspberry_pi_ip_address
+```
+
+### Installazione ROS2 Humble
+
+#### 1. Setup locale
+
+```console
+sudo apt update && sudo apt install locales
+sudo locale-gen en_US en_US.UTF-8
+sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+export LANG=en_US.UTF-8
+```
+
+#### 2. Setup sources
+
+Abilitare il repository Ubuntu Universe:
+```console
+sudo apt install software-properties-common
+sudo add-apt-repository universe
+```
+
+Aggiungere le nuove sources:
+```console
+sudo apt update && sudo apt install curl -y
+sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+```
+
+#### 3. Installazione pacchetti core ROS2
+
+```console
+sudo apt update
+sudo apt upgrade
+sudo apt install ros-humble-ros-base
+```
+
+**Nota**: Installiamo `ros-humble-ros-base` invece di `ros-humble-desktop` perché non include strumenti GUI, mantenendo l'installazione leggera per il Raspberry Pi.
+
+#### 4. Installazione colcon (build tool)
+
+```console
+sudo apt install python3-colcon-common-extensions
+```
+
+#### 5. Installazione dipendenze robot
+
+Pacchetti necessari per il funzionamento del robot:
+```console
+sudo apt install ros-humble-xacro ros-humble-robot-state-publisher
+```
+
+#### 6. Setup dell'ambiente
+
+Per configurare automaticamente l'ambiente ROS2 ad ogni sessione:
+```console
+echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+```
+
+### Note sull'uso di ROS2 su Raspberry Pi
+
+- Il Raspberry Pi 4 con almeno 2GB di RAM è raccomandato per un'esperienza ottimale
+- Per strumenti di visualizzazione come Rviz o Gazebo, considera un setup multi-macchina con il Pi che controlla l'hardware e un computer più potente per la visualizzazione
+- Per installare pacchetti aggiuntivi ROS2, usa il formato: `sudo apt install ros-humble-<nome-pacchetto>`
+
+### Setup del Progetto Robot-ROS
+
+#### 1. Installazione Git
+
+```console
+sudo apt install git
+```
+
+#### 2. Clone del Repository
+
+```console
 cd ~
-
 git clone https://github.com/riolaf05/robot-ros
+```
 
-cd robot-ros
+#### 3. Compilazione del Workspace
 
+```console
+cd ~/robot-ros
 colcon build
+```
 
+#### 4. Setup Automatico del Workspace
+
+Per configurare automaticamente il workspace ad ogni sessione:
+```console
+echo "source ~/robot-ros/install/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+```
+
+**Nota**: Ora ad ogni nuovo terminale, il workspace robot-ros sarà automaticamente disponibile e potrai utilizzare direttamente i comandi `ros2 launch robot_ros ...`
+
+### Risoluzione Problemi Comuni
+
+#### Errore: "No module named 'xacro'"
+Se ricevi questo errore quando lanci i file launch:
+```console
+sudo apt install ros-humble-xacro ros-humble-robot-state-publisher
+```
+
+#### Errore: "Package 'robot_ros' not found"
+Assicurati di aver compilato e fatto il source del workspace:
+```console
+cd ~/robot-ros
+colcon build
 source install/setup.bash
 ```
 
-### Simulazione
-
-1. robot state publisher
-2. Gazebo
-3. Rviz
-
+#### Verifica installazione
+Controlla che tutti i pacchetti siano installati:
 ```console
-ros2 launch robot_ros test_mobile_robot_1.launch.py 
+ros2 pkg list | grep robot_ros
 ```
 
-4. **Nav2** (serve per settare punti di arrivo e partenza e generare il percorso, necessita di `/map` e `/odom`), `/odom` è generato dal nodo `diff_drive` (simulato in Gazebo) che serve per fare l'odometria, cioè la stima della posizione del robot dati i comandi di movimento che gli sono stati dati (su `/cmd_vel`)
+## Descrizione del Progetto
+
+### Architettura del Sistema
+
+Questo progetto implementa un robot mobile differenziale utilizzando ROS2 Humble. Il sistema è progettato per funzionare sia in simulazione (Gazebo) che su hardware reale (Raspberry Pi), con capacità di navigazione autonoma e controllo remoto tramite interfaccia web.
+
+### Struttura del Pacchetto (setup.py)
+
+Il file `setup.py` definisce l'installazione del pacchetto ROS2 e include:
+
+#### Data Files
+- **launch/**: File di launch per avvio di nodi e configurazioni
+- **description/**: File URDF/Xacro per la descrizione del robot
+- **worlds/**: Mondi Gazebo per la simulazione
+- **rviz/**: Configurazioni per la visualizzazione in Rviz
+- **maps/**: Mappe per la navigazione
+- **config/**: File di configurazione per Nav2 e controller
+- **bt/**: Behavior trees per la navigazione
+
+### Definizione del Robot (URDF/Xacro)
+
+Il robot è definito utilizzando una struttura modulare di file Xacro:
+
+#### File Principali
+- **`robot.urdf.xacro`**: File principale che include tutti i componenti
+- **`robot_core.xacro`**: Definisce la struttura base del robot (chassis, ruote)
+- **`lidar.xacro`**: Definisce il sensore LiDAR
+- **`camera.xacro`**: Definisce la camera
+- **`gazebo_control.xacro`**: Plugin per il controllo in simulazione Gazebo
+- **`ros2_control.xacro`**: Interfaccia hardware per il robot reale
+
+#### Caratteristiche del Robot
+- **Tipo**: Robot mobile differenziale
+- **Ruote**: Due ruote motrici posteriori (raggio: 0.14m, larghezza: 0.06m)
+- **Sensori**: LiDAR per navigazione, camera per visione
+- **Frame di riferimento**: `base_footprint` → `base_link` → componenti specifici
+
+### Robot State Publisher
+
+Il `robot_state_publisher` è un nodo fondamentale che:
+- **Legge la descrizione URDF del robot** dal parametro `robot_description`
+- **Pubblica le trasformazioni statiche** tra i vari frame del robot
+- **Mantiene l'albero delle trasformazioni TF2** aggiornato
+- **Permette la visualizzazione corretta** in Rviz e altri strumenti
+
+Viene lanciato attraverso il file `rsp.launch.py` che:
+1. Processa il file Xacro principale (`robot.urdf.xacro`)
+2. Converte il risultato in URDF
+3. Passa l'URDF come parametro al robot_state_publisher
+4. Configura l'uso del tempo di simulazione quando necessario
+
+### Launch Files
+
+#### `rsp.launch.py`
+- Lancia solo il robot_state_publisher
+- Processa i file Xacro e genera l'URDF
+- Utilizzato come base per altri launch file
+
+#### `launch_robot.launch.py` (Robot Reale)
+- **Robot State Publisher**: Per le trasformazioni del robot
+- **Hardware Interface**: Nodo personalizzato per controllo motori (`cmdVel_to_pwm_node`)
+- **Camera Node**: Interfaccia con camera USB via v4l2
+- **Rosbridge**: Server WebSocket per interfaccia web remota
+
+#### `test_mobile_robot_1.launch.py` (Simulazione)
+- Launch file per simulazione completa in Gazebo
+- Include spawning del robot nel mondo virtuale
+- Configurazione per uso con Nav2 e SLAM
+
+#### Altri Launch Files
+- **`launch_sim.launch.py`**: Launch file alternativo per simulazione
+- **`surveillance_bot.launch.py`**: Configurazione per modalità sorveglianza
+- **`lidar.launch.py`**: Launch dedicato per il sensore LiDAR
+
+## Comandi di Lancio
+
+### Prerequisiti
+Prima di lanciare qualsiasi comando, assicurati di:
+1. Avere compilato il workspace: `colcon build`
+2. Aver fatto il source del workspace: `source install/setup.bash`
+
+### Robot Reale (Raspberry Pi)
+
+#### Lancio Completo del Robot
+```console
+ros2 launch robot_ros launch_robot.launch.py
+```
+Questo comando lancia:
+- Robot State Publisher
+- Hardware interface per controllo motori
+- Nodo camera (v4l2)
+- Rosbridge server per interfaccia web
+
+#### Solo Robot State Publisher
+```console
+ros2 launch robot_ros rsp.launch.py
+```
+Lancia solo il robot_state_publisher per pubblicare le trasformazioni del robot.
+
+#### Con Parametri Personalizzati
+```console
+ros2 launch robot_ros launch_robot.launch.py use_sim_time:=false
+```
+
+### Simulazione (Gazebo)
+
+#### Simulazione Base
+```console
+ros2 launch robot_ros test_mobile_robot_1.launch.py
+```
+Lancia la simulazione completa con Gazebo, Rviz e robot_state_publisher.
+
+#### Simulazione Alternativa
+```console
+ros2 launch robot_ros launch_sim.launch.py
+```
+
+#### Solo LiDAR
+```console
+ros2 launch robot_ros lidar.launch.py
+```
+
+### Modalità Sorveglianza
+```console
+ros2 launch robot_ros surveillance_bot.launch.py
+```
+
+### Controllo Remoto
+
+#### Interfaccia Web
+1. Lancia il robot con rosbridge: `ros2 launch robot_ros launch_robot.launch.py`
+2. Apri `webserver/index.html` nel browser (aggiorna l'IP del Raspberry Pi)
+
+#### Controllo da Tastiera
+```console
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
+```
+
+### Nodi Individuali
+
+#### Controllo Motori
+```console
+ros2 run robot_ros cmdVel_to_pwm_node
+```
+
+#### Publisher Odometria (deprecato)
+```console
+ros2 run robot_ros odom_publisher_node
+```
+
+#### Nodo di Test
+```console
+ros2 run robot_ros talker
+```
+
+#### Nodi Custom
+- `cmdVel_to_pwm_node`: Nodo custom che converte i comandi di velocità in segnali PWM per i motori, collegati tramite L298N. Non prevede l'utilizzo di motor encoder quindi **è deprecato**. 
+- `motor_controller_custom_node`: Controller personalizzato per i motori. Tentativo di pubblicare manualmente odom e altrei frame, quindi **è deprecato**.
+- `odom_publisher_node`: Pubblica dati di odometria. Tentativo di pubblicare manualmente odom e altrei frame, quindi **è deprecato**.
+- `nav_behaviour_tree`: Implementazione di behavior tree per navigazione
+- `talker`: Nodo di esempio per pubblicazione messaggi
+
+## Installazione pacchetti aggiuntivi
+
+### Setup pacchetti per la navigazione
+
+Per navigazione
+```console
+sudo apt install -y ros-humble-navigation2 ros-humble-nav2-bringup
+```
+
+Per simulazione con Turtlebot
+```console
+sudo apt install -y ros-humble-turtlebot3*
+```
+
+### Dipendenze per Simulazione
+
+Per la simulazione con Gazebo sono necessari i seguenti pacchetti:
+```console
+sudo apt install -y ros-humble-gazebo-ros-pkgs ros-humble-gazebo-ros2-control
+```
+
+La simulazione include:
+1. Robot State Publisher
+2. Gazebo (mondo virtuale e fisica)
+3. Rviz (visualizzazione)
+4. Plugin di controllo differenziale
+
+
+## Navigazione e SLAM
+
+### Nav2 (Navigazione Autonoma)
+Nav2 richiede `/map` e `/odom`. L'odometria (`/odom`) è generata dal plugin `diff_drive` in Gazebo per la simulazione, o da sensori/encoder reali sul robot fisico.
 
 ```console
-ros2 launch nav2_bringup navigation_launch.py use_sim_time:=True
+ros2 launch nav2_bringup navigation_launch.py use_sim_time:=True map:=maps/my_map_1
 ```
-TODO: integrarlo nel launch file
 
-5. **Slam Toolbox** (è uno dei tool per generare lo slam, fornisce `/map`)
+### SLAM (Mapping)
+SLAM Toolbox genera la mappa (`/map`) dell'ambiente:
 
 ```console
 ros2 launch slam_toolbox online_async_launch.py use_sim_time:=True
 ```
-TODO: integrarlo nel launch file
 
-
-### Robot su raspberry
-
-1. robot state publisher
-2. controller hardware custom fatto in python (`robot_ros/cmd_to_pwm_driver.py`) 
-3. ROS bridge per web server
-
+### Salvataggio Mappe
 ```console
-ros2 launch robot_ros launch_robot.launch.py
+ros2 run nav2_map_server map_saver_cli -f maps/my_map_name
 ```
 
-Lanciare `webserver/index.html` (aggiornando l'indirizzo IP) per la console web.
+## Debug e Monitoring
 
-## Altri comandi
+### Visualizzazione Sistema
+```console
+# Grafo di nodi e topic
+rqt_graph
 
-Lanciare ROS bridge
+# Albero delle trasformazioni TF2
+ros2 run tf2_tools view_frames.py
+
+# Monitor dei topic
+ros2 topic list
+ros2 topic echo /cmd_vel
+
+# Informazioni sui nodi
+ros2 node list
+ros2 node info /robot_state_publisher
+```
+
+### ROS Bridge (Standalone)
+Se non lanciato tramite launch file:
 ```console
 ros2 launch rosbridge_server rosbridge_websocket_launch.xml
 ```
 
-Salva le mappe
+### Salva le mappe
 ```console
 ros2 run nav2_map_server map_saver_cli -f maps/my_map_1
 ```
 
-Visualizza il grafo di nodi e topic
+### Pubblicazione manuale comandi velocità
 ```console
-rqt_graph
+ros2 topic pub /cmd_vel geometry_msgs/Twist '{linear: {x: 0.5}, angular: {z: 0.0}}'
 ```
 
-Visualizza l'albero delle trasformazioni (vedi `frames.pdf`)
+### Compilazione e Build
 ```console
-ros2 run tf2_tools view_frames.py
+# Compilazione completa
+colcon build
+
+# Compilazione singolo pacchetto
+colcon build --packages-select robot_ros
+
+# Source del workspace
+source install/setup.bash
 ```
 
-Tastiera da console
+## Gestione Versioni e Release
+
+### GitHub Actions Workflow
+
+Il progetto include un workflow automatico (`.github/workflows/release.yml`) che:
+
+#### Trigger
+- Si attiva automaticamente quando viene fatto un push su `master` o `main`
+
+#### Funzionalità
+1. **Creazione Tag Automatica**: Genera un tag con formato `vYYYY.MM.DD`
+2. **Gestione Conflitti**: Se esiste già un tag per la data corrente, aggiunge un suffisso incrementale (es. `v2025.10.27.1`)
+3. **Changelog Automatico**: Genera un changelog con tutti i commit dalla release precedente
+4. **Release GitHub**: Crea una release completa con descrizione e informazioni
+5. **Aggiornamento Versione**: Aggiorna automaticamente il file `package.xml` con la nuova versione
+
+#### Esempio di Tag Generati
+- `v2025.10.27` - Prima release del giorno
+- `v2025.10.27.1` - Seconda release dello stesso giorno
+- `v2025.10.28` - Prima release del giorno successivo
+
+#### Informazioni nella Release
+- Data e ora di creazione
+- Commit hash
+- Lista delle modifiche dalla release precedente
+- Artifact con informazioni di release
+
+#### Permessi Richiesti
+Il workflow richiede i permessi `contents: write` per creare tag e release.
+
+### Release Manuali
+Per creare release manuali:
 ```console
-ros2 run turtlebot3_teleop teleop_keyboard
+# Crea un tag locale
+git tag -a v1.0.0 -m "Release v1.0.0"
+
+# Push del tag
+git push origin v1.0.0
 ```
 
 # References 
 
-### Ros Navigation
+## Ros Navigation
 
 * [Corso Udemy](https://www.udemy.com/course/ros2-nav2-stack/)
 
-### ROS-bridge
+## ROS-bridge
 
 * [ROS web tutorial part 1 - rosbridge server and roslibjs](https://msadowski.github.io/ros-web-tutorial-pt1/)
 
 * [How to visualise ROS images in html?](https://parkerrobert.medium.com/how-to-visualise-ros-images-in-html-c6b88e37e985)
 
+## Batteria Raspberry
+
+* [PiSugar](https://www.amazon.it/dp/B09QRPNDHB?psc=1&ref=ppx_yo2ov_dt_b_product_details)

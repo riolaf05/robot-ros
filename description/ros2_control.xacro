@@ -23,18 +23,21 @@
         <state_interface name="velocity" />
         <state_interface name="position" />
     </joint>
-  </ros2_control> -->
+  </ros2_control>  -->
 
   <!-- Controllers-->
   <!-- Ruote-->
-  <!-- <gazebo>
+  <gazebo>
     <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-        <parameters>$(find my_bot_test)/description/config/my_controllers.yaml</parameters>
+        <parameters>$(find robot_ros)/description/config/my_controllers.yaml</parameters>
     </plugin>
-  </gazebo> -->
+  </gazebo>
 
   <!-- REAL CONTROL MANAGER-->
-  <ros2_control name="RealRobot" type="system">
+  <!-- In https://articulatedrobotics.xyz/mobile-robot-13-ros2-control-real/ the DiffDriveArduino has been used-->
+  <!-- but it has to be installed and used with an Arduino Nano as hardware interface -->
+  <!--  -->
+  <!-- <ros2_control name="RealRobot" type="system">
     <hardware>
         <plugin>diffdrive_arduino/DiffDriveArduino</plugin>
         <param name="left_wheel_name">left_wheel_joint</param>
@@ -62,7 +65,7 @@
         <state_interface name="velocity"/>
         <state_interface name="position"/>
     </joint>
-  </ros2_control>
+  </ros2_control> -->
   
 </robot>
 

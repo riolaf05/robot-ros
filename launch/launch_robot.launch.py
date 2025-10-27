@@ -16,14 +16,22 @@ def generate_launch_description():
                 )]), launch_arguments={'use_sim_time': 'false'}.items()
     )
 
-    #Hardware interface
+    #Hardware interface (custom)
     hdw_interface = Node(
         package='robot_ros',
         executable='cmdVel_to_pwm_node',
         output='screen',
-        parameters=[] #robot_state_publisher richiede il file URDF
+        parameters=[] 
     )
-    
+
+    # #fake odom publisher
+    # fake_odom_publisher = Node(
+    #     package='robot_ros',
+    #     executable='odom_publisher_node',
+    #     output='screen',
+    #     parameters=[] 
+    # )
+  
     #Camera
     camera_node = Node(
         package='v4l2_camera',
