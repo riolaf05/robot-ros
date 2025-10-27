@@ -62,7 +62,7 @@ TODO: integrarlo nel launch file
 3. ROS bridge per web server
 
 ```console
-ros2 launch robot_ros launch_robot.launch.py
+ros2 launch robot_ros launch_robot_cus.launch.py
 ```
 
 Lanciare `webserver/index.html` (aggiornando l'indirizzo IP) per la console web.
