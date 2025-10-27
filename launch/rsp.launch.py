@@ -48,7 +48,7 @@ def generate_launch_description():
     controller_manager = Node(
         package='controller_manager',
         executable='ros2_control_node',
-        parameters=[params, os.path.join(pkg_path, 'config', 'my_controllers.yaml')],
+        parameters=[os.path.join(pkg_path, 'config', 'my_controllers.yaml'), {'use_sim_time': use_sim_time}],
         output='screen'
     )
 
