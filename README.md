@@ -1,9 +1,137 @@
 # robot-ros
-Repository con il codice per la creazione di un robot tramite framework ROS2 (Humble)
+Repository con il codice per la creazione di un robot differenziale tramite framework ROS2 (Humble) con Arduino e ROSArduinoBridge.
 
-## Wiring 
+## 🎯 Panoramica del Progetto
 
-TODO
+Questo progetto implementa un **robot differenziale completo** controllato tramite ROS2, utilizzando:
+
+- **ROS2 Humble**: Framework principale per il controllo robotico
+- **ros2_control**: Sistema di controllo hardware/software
+- **Arduino**: Microcontrollore per il controllo motori 
+- **ROSArduinoBridge**: Firmware Arduino per comunicazione seriale
+- **Navigation2**: Stack di navigazione autonoma
+- **Hardware Interface**: Interfaccia custom per Arduino
+
+### 🚀 Funzionalità Implementate
+
+✅ **Controllo Differenziale**: Movimento omnidirezionale con due ruote motrici  
+✅ **Hardware Interface**: Comunicazione seriale robusta con Arduino  
+✅ **Teleoperazione**: Controllo remoto via tastiera (`teleop_twist_keyboard`)  
+✅ **Simulazione**: Test completi in Gazebo e RViz  
+✅ **Navigazione**: Integration con Nav2 stack per navigazione autonoma  
+✅ **Mapping**: Generazione mappe tramite SLAM  
+✅ **Web Interface**: Controllo via browser (ROSBridge)  
+
+## 🔧 Setup Hardware Arduino
+
+### Prerequisiti Hardware
+
+- **Arduino Uno/Mega**: Microcontrollore principale
+- **Motor Driver**: L298N o equivalente per controllo motori DC
+- **Encoder** (opzionali): Per feedback di posizione
+- **Sensori**: IMU, LiDAR, camera (opzionali)
+- **Alimentazione**: Batteria per motori e Arduino
+
+### 1. Installazione ROSArduinoBridge
+
+Il firmware Arduino è basato sul progetto **ROSArduinoBridge** ottimizzato per ROS2:
+
+```bash
+# Clone del repository firmware
+git clone https://github.com/riolaf05/ros_arduino_bridge.git
+cd ros_arduino_bridge
+```
+
+### 2. Configurazione Arduino IDE
+
+1. **Installare Arduino IDE** (versione 1.8.x o 2.x)
+2. **Installare librerie necessarie**:
+   ```
+   - PID Library (Brett Beauregard)
+   - Encoder Library (Paul Stoffregen) 
+   ```
+3. **Aprire il firmware**: `ros_arduino_bridge/ros_arduino_firmware/ros_arduino_firmware.ino`
+
+### 3. Configurazione Hardware nel Firmware
+
+Modifica il file `ROSArduinoBridge.h` per il tuo setup:
+
+```cpp
+// Configurazione motori
+#define USE_BASE      // Abilita controllo base mobile
+#define BAUDRATE     57600
+
+// Pin motori (L298N)
+#define RIGHT_MOTOR_BACKWARD 5
+#define LEFT_MOTOR_BACKWARD  6  
+#define RIGHT_MOTOR_FORWARD  9
+#define LEFT_MOTOR_FORWARD   10
+
+// Pin encoder (opzionali)
+#define LEFT_ENC_PIN_A  2
+#define LEFT_ENC_PIN_B  3
+#define RIGHT_ENC_PIN_A 18
+#define RIGHT_ENC_PIN_B 19
+
+// Parametri robot
+#define WHEEL_DIAMETER      0.065  // metri
+#define WHEEL_TRACK         0.17   // metri 
+#define ENCODER_CPR         360    // Count per rivoluzione
+```
+
+### 4. Upload Firmware
+
+1. **Collegare Arduino** via USB al computer
+2. **Selezionare porta** in Arduino IDE (Tools → Port → `/dev/ttyACM0`)
+3. **Upload firmware** → Compile and Upload
+4. **Verificare connessione**:
+   ```bash
+   # Test comunicazione seriale
+   echo "b" > /dev/ttyACM0  # Dovrebbe rispondere con baudrate
+   ```
+
+### 5. Protocollo di Comunicazione
+
+Il firmware utilizza il **protocollo ROSArduinoBridge** con questi comandi principali:
+
+```bash
+# Controllo motori PWM
+echo "o 100 150" > /dev/ttyACM0  # LEFT=100, RIGHT=150 PWM
+
+# Reset encoder  
+echo "r" > /dev/ttyACM0
+
+# Richiesta baudrate
+echo "b" > /dev/ttyACM0
+
+# Stop motori
+echo "o 0 0" > /dev/ttyACM0
+```
+
+## 💻 Installazione Software ROS2
+
+### Wiring Schema
+
+```
+Arduino Uno + L298N Motor Driver
+================================
+
+Arduino  →  L298N    →  Motore
+------------------------------
+Pin 5    →  IN1      →  Motor B (Right)
+Pin 6    →  IN2      →  Motor B (Right) 
+Pin 9    →  IN3      →  Motor A (Left)
+Pin 10   →  IN4      →  Motor A (Left)
+5V       →  VCC      →  Logic Power
+GND      →  GND      →  Ground
+         →  12V      →  Motor Power (batteria)
+
+Encoder (opzionali):
+Pin 2    →  Left Encoder A
+Pin 3    →  Left Encoder B  
+Pin 18   →  Right Encoder A
+Pin 19   →  Right Encoder B
+```
 
 ## ROS2 Humble Setup su Raspberry Pi
 
@@ -457,16 +585,180 @@ ros2 run nav2_map_server map_saver_cli -f maps/my_map_1
 ros2 topic pub /cmd_vel geometry_msgs/Twist '{linear: {x: 0.5}, angular: {z: 0.0}}'
 ```
 
+## 🚀 Quick Start - Avvio Rapido
+
+### 1. Compilazione del Workspace
+
+```bash
+cd /path/to/robot-ros
+colcon build --packages-select robot_ros
+source install/setup.bash
+```
+
+### 2. Test Sistema Completo
+
+**Metodo 1: Script Automatico (CONSIGLIATO)**
+```bash
+# Avvio sistema completo con teleop
+./run_robot_test.sh
+
+# In un nuovo terminale, avvia il teleop
+cd /path/to/robot-ros
+source install/setup.bash  
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=/diff_drive_controller/cmd_vel_unstamped
+```
+
+**Metodo 2: Avvio Manuale**
+```bash
+# Terminale 1: Hardware Interface + Controllers
+ros2 launch robot_ros arduino_persistent.launch.py
+
+# Terminale 2: Teleoperazione  
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=/diff_drive_controller/cmd_vel_unstamped
+```
+
+### 3. Controlli Teleop
+
+Dopo l'avvio del teleop keyboard:
+
+```
+Controlli di movimento:
+   i    - avanti
+   k    - stop  
+   j    - sinistra
+   l    - destra
+   u,o  - curve avanti sinistra/destra
+   m,.  - curve indietro sinistra/destra
+
+Velocità:
+   q/z  - aumenta/diminuisci velocità lineare  
+   w/x  - aumenta/diminuisci velocità angolare
+
+CTRL+C - esci
+```
+
+### 4. Test e Diagnostica
+
+**Verifica connessione Arduino:**
+```bash
+# Test comunicazione seriale diretta
+echo "o 100 100" > /dev/ttyACM0  # Motori a PWM 100
+echo "o 0 0" > /dev/ttyACM0      # Stop motori
+
+# Verifica porta seriale
+ls -la /dev/ttyACM*
+sudo chmod 666 /dev/ttyACM0  # Se necessario
+```
+
+**Monitoraggio ROS2:**
+```bash
+# Lista topic attivi
+ros2 topic list | grep cmd_vel
+
+# Monitoraggio comandi velocità
+ros2 topic echo /diff_drive_controller/cmd_vel_unstamped
+
+# Stato controller
+ros2 control list_controllers
+
+# Test comando manuale
+ros2 topic pub /diff_drive_controller/cmd_vel_unstamped geometry_msgs/msg/Twist "{linear: {x: 0.2}, angular: {z: 0.0}}" -r 1
+```
+
+**Log debugging:**
+```bash
+# Verifica log hardware interface
+ros2 launch robot_ros arduino_persistent.launch.py --ros-args --log-level DEBUG
+
+# Cerca messaggi debug specifici
+# - "RECEIVED VELOCITIES: Left=X rad/s, Right=Y rad/s"
+# - "Motor PWM command sent: o X Y" 
+# - "Arduino Hardware Interface activated"
+```
+
+## 🔧 Configurazione Avanzata
+
+### Parametri Hardware Interface
+
+File: `config/arduino_controllers_fixed.yaml`
+
+```yaml
+controller_manager:
+  ros__parameters:
+    update_rate: 10  # Hz - frequenza aggiornamento
+
+robot_ros:
+  hardware_interface:
+    - name: "RealRobot"  
+      type: "arduino_hardware_interface/ArduinoHardwareInterface"
+      parameters:
+        device: "/dev/ttyACM0"  # Porta Arduino
+        baud_rate: 57600        # Baudrate comunicazione
+        timeout: 1000          # Timeout ms
+        
+diff_drive_controller:
+  ros__parameters:
+    left_wheel_names: ["base_left_wheel_joint"]
+    right_wheel_names: ["base_right_wheel_joint"] 
+    wheel_separation: 0.17     # Distanza ruote (m)
+    wheel_radius: 0.0325       # Raggio ruote (m)
+    
+    # Limiti velocità
+    linear.x.has_velocity_limits: true
+    linear.x.max_velocity: 1.0        # m/s
+    angular.z.has_velocity_limits: true  
+    angular.z.max_velocity: 1.0       # rad/s
+```
+
+### Troubleshooting Comuni
+
+**Problema: Arduino non risponde**
+```bash
+# Verifica connessione
+sudo dmesg | grep tty
+lsusb | grep Arduino
+
+# Reset permessi
+sudo usermod -a -G dialout $USER
+newgrp dialout
+```
+
+**Problema: Comandi con ritardo**  
+✅ **RISOLTO**: Implementato `fsync()` per flush immediato buffer seriale
+
+**Problema: Robot non si muove con teleop**
+```bash
+# 1. Verifica topic pubblicazione
+ros2 topic echo /diff_drive_controller/cmd_vel_unstamped
+
+# 2. Verifica controller attivo  
+ros2 control list_controllers
+
+# 3. Test comando diretto Arduino
+echo "o 100 100" > /dev/ttyACM0
+
+# 4. Verifica log hardware interface
+# Cerca: "RECEIVED VELOCITIES" nei log
+```
+
+**Problema: Valori PWM sempre a 0**
+- Verifica parametri `max_velocity` nella conversione `velocity_to_pwm()`
+- Default: `max_velocity = 5.0 rad/s` 
+- PWM = `(velocity / max_velocity) * 255`
+
 ### Compilazione e Build
 ```console
 # Compilazione completa
 colcon build
 
-# Compilazione singolo pacchetto
+# Compilazione singolo pacchetto  
 colcon build --packages-select robot_ros
 
 # Source del workspace
 source install/setup.bash
+
+# Compilazione con debug verbose
+colcon build --packages-select robot_ros --cmake-args -DCMAKE_BUILD_TYPE=Debug
 ```
 
 ## Gestione Versioni e Release

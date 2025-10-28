@@ -1,0 +1,364 @@
+#include "arduino_hardware_interface.hpp"
+
+#include <chrono>
+#include <cstring>
+#include <sstream>
+#include <thread>
+
+namespace arduino_hardware_interface
+{
+
+hardware_interface::CallbackReturn ArduinoHardwareInterface::on_init(
+  const hardware_interface::HardwareInfo & info)
+{
+  if (
+    hardware_interface::SystemInterface::on_init(info) !=
+    hardware_interface::CallbackReturn::SUCCESS)
+  {
+    return hardware_interface::CallbackReturn::ERROR;
+  }
+
+  // Leggi parametri
+  device_ = info_.hardware_parameters.at("device");
+  baud_rate_ = std::stoi(info_.hardware_parameters.at("baud_rate"));
+  timeout_ = std::stod(info_.hardware_parameters.at("timeout")) / 1000.0;
+  enc_counts_per_rev_ = std::stoi(info_.hardware_parameters.at("enc_counts_per_rev"));
+  
+  // Parametri opzionali
+  wheel_radius_ = 0.065;  // 65mm default
+  wheel_separation_ = 0.17;  // 170mm default
+  
+  if (info_.hardware_parameters.count("wheel_radius")) {
+    wheel_radius_ = std::stod(info_.hardware_parameters.at("wheel_radius"));
+  }
+  if (info_.hardware_parameters.count("wheel_separation")) {
+    wheel_separation_ = std::stod(info_.hardware_parameters.at("wheel_separation"));
+  }
+
+  // Verifica che ci siano esattamente 2 joint
+  if (info_.joints.size() != 2) {
+    RCLCPP_ERROR(logger_, "Expected exactly 2 joints, got %zu", info_.joints.size());
+    return hardware_interface::CallbackReturn::ERROR;
+  }
+
+  // Ottieni i nomi dei joint
+  left_wheel_name_ = info_.joints[0].name;
+  right_wheel_name_ = info_.joints[1].name;
+
+  // Inizializza i vettori di stato
+  hw_positions_.resize(info_.joints.size(), 0.0);
+  hw_velocities_.resize(info_.joints.size(), 0.0);
+  hw_commands_.resize(info_.joints.size(), 0.0);
+
+  RCLCPP_INFO(logger_, "Arduino Hardware Interface initialized");
+  RCLCPP_INFO(logger_, "Device: %s, Baud: %d", device_.c_str(), baud_rate_);
+  RCLCPP_INFO(logger_, "Left wheel: %s, Right wheel: %s", 
+              left_wheel_name_.c_str(), right_wheel_name_.c_str());
+
+  return hardware_interface::CallbackReturn::SUCCESS;
+}
+
+std::vector<hardware_interface::StateInterface> ArduinoHardwareInterface::export_state_interfaces()
+{
+  std::vector<hardware_interface::StateInterface> state_interfaces;
+  
+  for (size_t i = 0; i < info_.joints.size(); i++) {
+    state_interfaces.emplace_back(hardware_interface::StateInterface(
+      info_.joints[i].name, "position", &hw_positions_[i]));
+    state_interfaces.emplace_back(hardware_interface::StateInterface(
+      info_.joints[i].name, "velocity", &hw_velocities_[i]));
+  }
+
+  return state_interfaces;
+}
+
+std::vector<hardware_interface::CommandInterface> ArduinoHardwareInterface::export_command_interfaces()
+{
+  std::vector<hardware_interface::CommandInterface> command_interfaces;
+  
+  for (size_t i = 0; i < info_.joints.size(); i++) {
+    command_interfaces.emplace_back(hardware_interface::CommandInterface(
+      info_.joints[i].name, "velocity", &hw_commands_[i]));
+  }
+
+  return command_interfaces;
+}
+
+hardware_interface::CallbackReturn ArduinoHardwareInterface::on_activate(
+  const rclcpp_lifecycle::State & /*previous_state*/)
+{
+  RCLCPP_INFO(logger_, "Activating Arduino Hardware Interface...");
+  
+  if (!connect_arduino()) {
+    return hardware_interface::CallbackReturn::ERROR;
+  }
+
+  // Reset encoders
+  send_command("r");
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+  // Avvia thread di lettura encoder
+  keep_reading_ = true;
+  encoder_thread_ = std::thread(&ArduinoHardwareInterface::read_encoders_loop, this);
+
+  RCLCPP_INFO(logger_, "Arduino Hardware Interface activated");
+  return hardware_interface::CallbackReturn::SUCCESS;
+}
+
+hardware_interface::CallbackReturn ArduinoHardwareInterface::on_deactivate(
+  const rclcpp_lifecycle::State & /*previous_state*/)
+{
+  RCLCPP_INFO(logger_, "Deactivating Arduino Hardware Interface...");
+
+  // Ferma i motori
+  send_motor_commands(0, 0);
+
+  // Ferma il thread di lettura
+  keep_reading_ = false;
+  if (encoder_thread_.joinable()) {
+    encoder_thread_.join();
+  }
+
+  disconnect_arduino();
+
+  RCLCPP_INFO(logger_, "Arduino Hardware Interface deactivated");
+  return hardware_interface::CallbackReturn::SUCCESS;
+}
+
+hardware_interface::return_type ArduinoHardwareInterface::read(
+  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+{
+  // I dati vengono aggiornati dal thread di lettura encoder
+  return hardware_interface::return_type::OK;
+}
+
+hardware_interface::return_type ArduinoHardwareInterface::write(
+  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+{
+  // Converti velocità in PWM e invia comandi
+  int left_pwm = velocity_to_pwm(hw_commands_[0]);
+  int right_pwm = velocity_to_pwm(hw_commands_[1]);
+  
+  send_motor_commands(left_pwm, right_pwm);
+
+  return hardware_interface::return_type::OK;
+}
+
+bool ArduinoHardwareInterface::connect_arduino()
+{
+  // Apri porta seriale
+  serial_fd_ = open(device_.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
+  
+  if (serial_fd_ == -1) {
+    RCLCPP_ERROR(logger_, "Failed to open serial port: %s", device_.c_str());
+    return false;
+  }
+
+  // Configura porta seriale
+  struct termios options;
+  tcgetattr(serial_fd_, &options);
+  
+  // Imposta baudrate
+  speed_t speed;
+  switch (baud_rate_) {
+    case 9600:   speed = B9600;   break;
+    case 19200:  speed = B19200;  break;
+    case 38400:  speed = B38400;  break;
+    case 57600:  speed = B57600;  break;
+    case 115200: speed = B115200; break;
+    default:
+      RCLCPP_ERROR(logger_, "Unsupported baud rate: %d", baud_rate_);
+      close(serial_fd_);
+      return false;
+  }
+  
+  cfsetispeed(&options, speed);
+  cfsetospeed(&options, speed);
+  
+  // Configura parametri seriali
+  options.c_cflag |= (CLOCAL | CREAD);
+  options.c_cflag &= ~PARENB;  // No parity
+  options.c_cflag &= ~CSTOPB;  // 1 stop bit
+  options.c_cflag &= ~CSIZE;
+  options.c_cflag |= CS8;      // 8 data bits
+  options.c_cflag &= ~CRTSCTS; // No hardware flow control
+  
+  options.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+  options.c_iflag &= ~(IXON | IXOFF | IXANY);
+  options.c_oflag &= ~OPOST;
+
+  tcsetattr(serial_fd_, TCSANOW, &options);
+  
+  // Aspetta che Arduino si inizializzi
+  std::this_thread::sleep_for(std::chrono::seconds(2));
+  
+  // Pulisci buffer
+  tcflush(serial_fd_, TCIOFLUSH);
+  
+  // Testa la connessione
+  send_command("v");
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  
+  std::string response = read_response();
+  if (!response.empty()) {
+    RCLCPP_INFO(logger_, "Arduino connected: %s", response.c_str());
+  } else {
+    RCLCPP_WARN(logger_, "No response from Arduino, continuing anyway...");
+  }
+
+  return true;
+}
+
+void ArduinoHardwareInterface::disconnect_arduino()
+{
+  if (serial_fd_ != -1) {
+    close(serial_fd_);
+    serial_fd_ = -1;
+  }
+}
+
+bool ArduinoHardwareInterface::send_command(const std::string& command)
+{
+  if (serial_fd_ == -1) return false;
+  
+  std::string cmd = command + "\r";
+  ssize_t bytes_written = ::write(serial_fd_, cmd.c_str(), cmd.length());
+  
+  if (bytes_written != static_cast<ssize_t>(cmd.length())) {
+    RCLCPP_ERROR(logger_, "Failed to write command: %s", command.c_str());
+    return false;
+  }
+  
+  return true;
+}
+
+std::string ArduinoHardwareInterface::read_response()
+{
+  if (serial_fd_ == -1) return "";
+  
+  char buffer[256];
+  std::string response = "";
+  
+  // Leggi con timeout
+  fd_set readfds;
+  struct timeval timeout;
+  
+  FD_ZERO(&readfds);
+  FD_SET(serial_fd_, &readfds);
+  
+  timeout.tv_sec = static_cast<int>(timeout_);
+  timeout.tv_usec = static_cast<int>((timeout_ - timeout.tv_sec) * 1000000);
+  
+  int result = select(serial_fd_ + 1, &readfds, nullptr, nullptr, &timeout);
+  
+  if (result > 0 && FD_ISSET(serial_fd_, &readfds)) {
+    ssize_t bytes_read = ::read(serial_fd_, buffer, sizeof(buffer) - 1);
+    if (bytes_read > 0) {
+      buffer[bytes_read] = '\0';
+      response = std::string(buffer);
+      
+      // Rimuovi caratteri di fine riga
+      size_t pos = response.find_first_of("\r\n");
+      if (pos != std::string::npos) {
+        response = response.substr(0, pos);
+      }
+    }
+  }
+  
+  return response;
+}
+
+void ArduinoHardwareInterface::send_motor_commands(int left_pwm, int right_pwm)
+{
+  // Limita valori PWM
+  left_pwm = std::max(-255, std::min(255, left_pwm));
+  right_pwm = std::max(-255, std::min(255, right_pwm));
+  
+  // Formato comando: m left_pwm right_pwm
+  std::ostringstream cmd;
+  cmd << "m " << left_pwm << " " << right_pwm;
+  
+  send_command(cmd.str());
+}
+
+void ArduinoHardwareInterface::read_encoders_loop()
+{
+  double prev_left_pos = 0.0;
+  double prev_right_pos = 0.0;
+  auto prev_time = std::chrono::steady_clock::now();
+  
+  while (keep_reading_) {
+    // Richiedi lettura encoder
+    send_command("e");
+    
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    
+    std::string response = read_response();
+    
+    if (!response.empty()) {
+      // Parsa risposta encoder: "left_ticks right_ticks"
+      std::istringstream iss(response);
+      std::string left_str, right_str;
+      
+      if (iss >> left_str >> right_str) {
+        try {
+          int left_ticks = std::stoi(left_str);
+          int right_ticks = std::stoi(right_str);
+          
+          // Converti ticks in posizione (radianti)
+          double left_pos = ticks_to_position(left_ticks);
+          double right_pos = ticks_to_position(right_ticks);
+          
+          // Calcola velocità
+          auto current_time = std::chrono::steady_clock::now();
+          double dt = std::chrono::duration<double>(current_time - prev_time).count();
+          
+          double left_vel = (left_pos - prev_left_pos) / dt;
+          double right_vel = (right_pos - prev_right_pos) / dt;
+          
+          // Aggiorna dati thread-safe
+          {
+            std::lock_guard<std::mutex> lock(data_mutex_);
+            hw_positions_[0] = left_pos;
+            hw_positions_[1] = right_pos;
+            hw_velocities_[0] = left_vel;
+            hw_velocities_[1] = right_vel;
+          }
+          
+          prev_left_pos = left_pos;
+          prev_right_pos = right_pos;
+          prev_time = current_time;
+          
+        } catch (const std::exception& e) {
+          RCLCPP_WARN(logger_, "Failed to parse encoder response: %s", response.c_str());
+        }
+      }
+    }
+    
+    std::this_thread::sleep_for(std::chrono::milliseconds(50)); // 20Hz
+  }
+}
+
+int ArduinoHardwareInterface::velocity_to_pwm(double velocity)
+{
+  // Fattore di conversione empirico
+  // Potrebbe essere necessario calibrarlo per il tuo robot
+  const double max_velocity = 10.0; // rad/s
+  double pwm = (velocity / max_velocity) * 255.0;
+  return static_cast<int>(std::max(-255.0, std::min(255.0, pwm)));
+}
+
+double ArduinoHardwareInterface::ticks_to_position(int ticks)
+{
+  return (static_cast<double>(ticks) / static_cast<double>(enc_counts_per_rev_)) * 2.0 * M_PI;
+}
+
+}  // namespace arduino_hardware_interface
+
+// Macro per registrare il plugin
+#include "pluginlib/class_list_macros.hpp"
+
+PLUGINLIB_EXPORT_CLASS(
+  arduino_hardware_interface::ArduinoHardwareInterface,
+  hardware_interface::SystemInterface
+)

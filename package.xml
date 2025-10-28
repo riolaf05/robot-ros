@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>robot_ros</name>
-  <version>v2025.10.27.2</version>
+  <version>1.0.0</version>
   <description>TODO: Package description</description>
   <maintainer email="lafacerosario@gmail.com">rosario</maintainer>
   <license>TODO: License declaration</license>
@@ -23,7 +23,11 @@
   <test_depend>ament_pep257</test_depend>
   <test_depend>python3-pytest</test_depend>
 
+  <build_depend>ament_cmake</build_depend>
+  <build_depend>ament_cmake_python</build_depend>
+
   <export>
-    <build_type>ament_python</build_type>
+    <build_type>ament_cmake</build_type>
+    <pluginlib plugin="${prefix}/robot_ros/hardware_interface/arduino_hardware_interface_plugin.xml"/>
   </export>
 </package>

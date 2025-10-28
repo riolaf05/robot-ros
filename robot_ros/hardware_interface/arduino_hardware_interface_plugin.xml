@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<library path="arduino_hardware_interface">
+  <class name="arduino_hardware_interface/ArduinoHardwareInterface" 
+         type="arduino_hardware_interface::ArduinoHardwareInterface" 
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Hardware interface for communicating with Arduino using ros_arduino_bridge firmware
+    </description>
+  </class>
+</library>
