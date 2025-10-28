@@ -7,6 +7,17 @@
   <maintainer email="lafacerosario@gmail.com">rosario</maintainer>
   <license>TODO: License declaration</license>
 
+  <!-- ROS2 Control dependencies -->
+  <depend>hardware_interface</depend>
+  <depend>pluginlib</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+  <depend>controller_manager</depend>
+  <depend>diff_drive_controller</depend>
+  <depend>joint_state_broadcaster</depend>
+  <depend>ros2_controllers</depend>
+  <depend>ros2_control</depend>
+
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>

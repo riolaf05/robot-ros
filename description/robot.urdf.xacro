@@ -1,13 +1,21 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="robot">
 
+    <!-- Argomenti per configurazione -->
+    <xacro:arg name="use_ros2_control" default="true" />
+    <xacro:arg name="sim_mode" default="false" />
+
     <xacro:include filename="robot_core.xacro" />
 
-    <!-- simulation with gazebo controller (for odom)-->
-    <xacro:include filename="gazebo_control.xacro" />  
+    <!-- ROS2 Control (sia per simulazione che reale) -->
+    <xacro:if value="$(arg use_ros2_control)">
+        <xacro:include filename="ros2_control.xacro" />
+    </xacro:if>
 
-    <!-- real robot (for odom)-->
-    <!-- <xacro:include filename="ros2_control.xacro" /> -->
+    <!-- Gazebo control legacy (solo se non si usa ros2_control) -->
+    <xacro:unless value="$(arg use_ros2_control)">
+        <xacro:include filename="gazebo_control.xacro" />
+    </xacro:unless>
 
     <xacro:include filename="lidar.xacro" />
     <xacro:include filename="camera.xacro" />
