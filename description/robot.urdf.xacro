@@ -4,10 +4,10 @@
     <xacro:include filename="robot_core.xacro" />
 
     <!-- simulation with gazebo controller (for odom)-->
-    <xacro:include filename="gazebo_control.xacro" />  
+    <!-- <xacro:include filename="gazebo_control.xacro" /> -->
 
     <!-- real robot (for odom)-->
-    <!-- <xacro:include filename="ros2_control.xacro" /> -->
+    <xacro:include filename="ros2_control.xacro" />
 
     <xacro:include filename="lidar.xacro" />
     <xacro:include filename="camera.xacro" />

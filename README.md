@@ -1,9 +1,32 @@
 # robot-ros
 Repository con il codice per la creazione di un robot tramite framework ROS2 (Humble)
 
-## Wiring 
+## 🚀 Quick Start
 
-TODO
+Vuoi far partire il robot velocemente? Vedi [QUICKSTART.md](QUICKSTART.md) per una guida rapida di 30 minuti.
+
+## Wiring
+
+Vedi la guida completa: [docs/WIRING.md](docs/WIRING.md)
+
+Schema collegamenti per:
+- Arduino Nano ↔ L298N Motor Driver
+- Arduino Nano ↔ Encoder Motori
+- L298N ↔ Motori DC
+- Arduino/LIDAR/Camera ↔ Raspberry Pi
+- Sistema di alimentazione completo
+
+## Deployment
+
+Vedi la guida completa: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+
+Guida step-by-step per:
+- Setup Raspberry Pi con Ubuntu 22.04
+- Installazione ROS2 Humble e dipendenze
+- Programmazione Arduino Nano
+- Configurazione hardware
+- Test e verifica sistema
+- Troubleshooting comune
 
 ## ROS2 Humble Setup su Raspberry Pi
 

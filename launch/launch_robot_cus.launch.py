@@ -16,21 +16,8 @@ def generate_launch_description():
                 )]), launch_arguments={'use_sim_time': 'false'}.items()
     )
 
-    #Hardware interface (custom)
-    hdw_interface = Node(
-        package='robot_ros',
-        executable='cmdVel_to_pwm_node',
-        output='screen',
-        parameters=[] 
-    )
-
-    # #fake odom publisher
-    # fake_odom_publisher = Node(
-    #     package='robot_ros',
-    #     executable='odom_publisher_node',
-    #     output='screen',
-    #     parameters=[] 
-    # )
+    # Nota: Hardware interface è ora gestito da ros2_control nel file rsp.launch.py
+    # Il nodo cmdVel_to_pwm_node custom è deprecato e sostituito da DiffDriveArduino
   
     #Camera
     camera_node = Node(
@@ -42,6 +29,19 @@ def generate_launch_description():
            #'camera_frame_id': 'camera_link_optical'
            'video_device': '/dev/video0'
             }]
+    )
+
+    # LIDAR RPLIDAR
+    lidar_node = Node(
+        package='rplidar_ros',
+        executable='rplidar_composition',
+        output='screen',
+        parameters=[{
+            'serial_port': '/dev/ttyUSB1',
+            'frame_id': 'laser_frame',
+            'angle_compensate': True,
+            'scan_mode': 'Standard'
+        }]
     )
 
     #Rosbridge
@@ -57,7 +57,7 @@ def generate_launch_description():
     # Launch them all!
     return LaunchDescription([
         rsp,
-        hdw_interface,
+        lidar_node,
         camera_node,
         rosbridge_node
     ])

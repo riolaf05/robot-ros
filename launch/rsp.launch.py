@@ -2,7 +2,8 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
-from launch.actions import DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.event_handlers import OnProcessExit
 from launch_ros.actions import Node
 import xacro
 
@@ -26,6 +27,48 @@ def generate_launch_description():
         parameters=[params] #robot_state_publisher richiede il file URDF
     )
 
+    # Controller Manager per ros2_control
+    controller_manager = Node(
+        package='controller_manager',
+        executable='ros2_control_node',
+        parameters=[
+            {'robot_description': robot_description_config.toxml()},
+            os.path.join(pkg_path, 'config', 'my_controllers.yaml')
+        ],
+        output='screen',
+    )
+
+    # Joint State Broadcaster Spawner
+    joint_state_broadcaster_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_broad'],
+        output='screen',
+    )
+
+    # Diff Drive Controller Spawner
+    diff_drive_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['diff_cont'],
+        output='screen',
+    )
+
+    # Delay start of joint_state_broadcaster after controller_manager
+    delayed_joint_state_broadcaster = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=controller_manager,
+            on_exit=[joint_state_broadcaster_spawner],
+        )
+    )
+
+    # Delay start of diff_drive_controller after joint_state_broadcaster
+    delayed_diff_drive_spawner = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=joint_state_broadcaster_spawner,
+            on_exit=[diff_drive_spawner],
+        )
+    )
 
     # SLAM Toolbox node
     slam_toolbox_node = Node(
@@ -52,6 +95,9 @@ def generate_launch_description():
             description='Use sim time if true'),
 
         node_robot_state_publisher,
+        controller_manager,
+        delayed_joint_state_broadcaster,
+        delayed_diff_drive_spawner,
         slam_toolbox_node
     ])
     
