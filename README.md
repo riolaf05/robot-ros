@@ -163,35 +163,45 @@ source ~/.bashrc
 
 ### Setup del Progetto Robot-ROS
 
-#### 1. Installazione Git
+**⚠️ IMPORTANTE:** Tutti i package (`serial`, `diffdrive_arduino`, `robot_ros`) devono essere nello **stesso workspace** per risolvere le dipendenze. Vedi [docs/INSTALLATION_NOTES.md](docs/INSTALLATION_NOTES.md) per dettagli.
+
+#### 1. Installazione Dipendenze di Sistema
 
 ```console
-sudo apt install git
+sudo apt install -y git libserial-dev python3-serial
 ```
 
-#### 2. Clone del Repository
+**Nota:** `libserial-dev` è **obbligatorio** prima di compilare il workspace.
+
+#### 2. Creazione Workspace Unificato
 
 ```console
 cd ~
-git clone https://github.com/riolaf05/robot-ros
+mkdir -p robot_ws/src
+cd robot_ws/src
+
+# Clona tutti i package necessari
+git clone https://github.com/RoverRobotics-forks/serial-ros2.git serial
+git clone https://github.com/joshnewans/diffdrive_arduino.git
+git clone https://github.com/riolaf05/robot-ros.git
 ```
 
 #### 3. Compilazione del Workspace
 
 ```console
-cd ~/robot-ros
-colcon build
+cd ~/robot_ws
+colcon build --symlink-install
 ```
 
 #### 4. Setup Automatico del Workspace
 
 Per configurare automaticamente il workspace ad ogni sessione:
 ```console
-echo "source ~/robot-ros/install/setup.bash" >> ~/.bashrc
+echo "source ~/robot_ws/install/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-**Nota**: Ora ad ogni nuovo terminale, il workspace robot-ros sarà automaticamente disponibile e potrai utilizzare direttamente i comandi `ros2 launch robot_ros ...`
+**Nota**: Ora ad ogni nuovo terminale, tutti i package saranno automaticamente disponibili.
 
 ### Risoluzione Problemi Comuni
 
@@ -202,26 +212,55 @@ sudo apt install ros-humble-xacro ros-humble-robot-state-publisher
 ```
 
 #### Errore: "Package 'robot_ros' not found"
-Assicurati di aver compilato e fatto il source del workspace:
+Assicurati di aver compilato e fatto il source del workspace unificato:
 ```console
-cd ~/robot-ros
-colcon build
+cd ~/robot_ws
+colcon build --symlink-install
 source install/setup.bash
+```
+
+#### Errore: "serial/serial.h: No such file or directory"
+Installa la libreria di sistema mancante:
+```console
+sudo apt install -y libserial-dev python3-serial
+cd ~/robot_ws
+rm -rf build install log
+colcon build --symlink-install
 ```
 
 #### Installazione completa dipendenze
 Per installare tutti i pacchetti necessari in una volta:
 ```console
-sudo apt install -y ros-humble-xacro ros-humble-robot-state-publisher \
-ros-humble-slam-toolbox ros-humble-navigation2 ros-humble-nav2-bringup \
-ros-humble-teleop-twist-keyboard ros-humble-serial python3-serial \
-ros-humble-ros2-control ros-humble-ros2-controllers
+# Dipendenze di sistema (OBBLIGATORIO)
+sudo apt install -y libserial-dev python3-serial git
+
+# Pacchetti ROS2
+sudo apt install -y \
+  ros-humble-xacro \
+  ros-humble-robot-state-publisher \
+  ros-humble-slam-toolbox \
+  ros-humble-navigation2 \
+  ros-humble-nav2-bringup \
+  ros-humble-teleop-twist-keyboard \
+  ros-humble-ros2-control \
+  ros-humble-ros2-controllers \
+  ros-humble-controller-manager \
+  ros-humble-rplidar-ros \
+  ros-humble-v4l2-camera \
+  ros-humble-rosbridge-server
 ```
+
+**Nota:** `libserial-dev` è necessario per compilare `serial-ros2`.
 
 #### Verifica installazione
 Controlla che tutti i pacchetti siano installati:
 ```console
-ros2 pkg list | grep -E "(robot_ros|slam_toolbox|teleop|nav2)"
+# Verifica package compilati
+ros2 pkg list | grep -E "(serial|diffdrive|robot_ros)"
+# Output atteso: serial, diffdrive_arduino, robot_ros
+
+# Verifica package di sistema
+ros2 pkg list | grep -E "(slam_toolbox|teleop|nav2)"
 ```
 
 ## Descrizione del Progetto

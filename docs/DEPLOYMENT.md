@@ -164,24 +164,32 @@ sudo apt install -y \
   ros-humble-controller-manager
 ```
 
-### 4. Serial e DiffDriveArduino Hardware Interface
+### 4. Serial, DiffDriveArduino e Robot Package (Workspace Unificato)
 
-**Importante:** DiffDriveArduino richiede la libreria `serial` come dipendenza. Devono essere compilati insieme nello stesso workspace.
+**⚠️ IMPORTANTE:** Tutti i package (`serial`, `diffdrive_arduino`, `robot_ros`) devono essere nello stesso workspace per risolvere correttamente le dipendenze.
 
 ```bash
-# Crea workspace unificato per serial e diffdrive_arduino
+# Crea workspace unificato
 cd ~
 mkdir -p robot_ws/src
 cd robot_ws/src
 
-# Clona serial (dipendenza necessaria)
+# 1. Clona serial (dipendenza necessaria)
 git clone https://github.com/RoverRobotics-forks/serial-ros2.git serial
 
-# Clona diffdrive_arduino
+# 2. Clona diffdrive_arduino
 git clone https://github.com/joshnewans/diffdrive_arduino.git
 
-# Compila entrambi insieme
+# 3. Clona il progetto robot_ros
+git clone https://github.com/riolaf05/robot-ros.git
+
+# Torna alla root del workspace
 cd ~/robot_ws
+
+# Installa dipendenze di sistema (se non già fatto)
+sudo apt install -y libserial-dev python3-serial
+
+# Compila tutti i package insieme
 colcon build --symlink-install
 
 # Source del workspace
@@ -189,7 +197,11 @@ source install/setup.bash
 echo "source ~/robot_ws/install/setup.bash" >> ~/.bashrc
 ```
 
-**Nota:** La libreria `serial` è una dipendenza di `diffdrive_arduino` e deve essere nello stesso workspace per essere rilevata correttamente da CMake.
+**Nota:**
+- `libserial-dev` è richiesto da `serial-ros2`
+- `serial` è una dipendenza di `diffdrive_arduino`
+- `robot_ros` dipende da `diffdrive_arduino`
+- Tutti devono essere nello stesso workspace per essere rilevati correttamente da CMake
 
 ### 5. RPLIDAR Driver
 
@@ -206,12 +218,21 @@ sudo apt install -y \
   ros-humble-rosbridge-suite
 ```
 
-### 7. Utilità e Strumenti
+### 7. Librerie di Sistema Necessarie
+
+```bash
+sudo apt install -y \
+  libserial-dev \
+  python3-serial
+```
+
+**Nota:** `libserial-dev` è richiesto dalla libreria `serial-ros2` e deve essere installato PRIMA di compilare il workspace.
+
+### 8. Utilità e Strumenti
 
 ```bash
 sudo apt install -y \
   ros-humble-teleop-twist-keyboard \
-  python3-serial \
   git \
   minicom \
   screen
@@ -271,32 +292,32 @@ Scollega l'Arduino dal PC e collegalo al Raspberry Pi via USB.
 
 ## Clone e Build del Progetto
 
-### 1. Clone Repository
+**✅ IMPORTANTE:** Se hai seguito correttamente la sezione precedente (4. Serial, DiffDriveArduino e Robot Package), hai già clonato e compilato tutto nel workspace unificato `~/robot_ws`.
+
+Il progetto `robot_ros` è già dentro `~/robot_ws/src/robot-ros` e compilato insieme a `serial` e `diffdrive_arduino`.
+
+### Verifica Build Completato
 
 ```bash
-cd ~
-git clone https://github.com/riolaf05/robot-ros.git
-cd robot-ros
+# Verifica che tutti i package siano stati compilati
+cd ~/robot_ws
+source install/setup.bash
+ros2 pkg list | grep -E "(serial|diffdrive|robot_ros)"
 ```
 
-### 2. Verifica Dipendenze
-
-```bash
-rosdep install --from-paths . --ignore-src -r -y
+Dovresti vedere nell'output:
+```
+diffdrive_arduino
+robot_ros
+serial
 ```
 
-### 3. Build del Workspace
+### Setup Automatico Workspace (già fatto)
+
+Se hai seguito la sezione precedente, hai già aggiunto al `.bashrc`:
 
 ```bash
-colcon build --symlink-install
-```
-
-**Nota:** `--symlink-install` permette di modificare i file Python senza ricompilare.
-
-### 4. Setup Automatico Workspace
-
-```bash
-echo "source ~/robot-ros/install/setup.bash" >> ~/.bashrc
+source ~/robot_ws/install/setup.bash
 source ~/.bashrc
 ```
 

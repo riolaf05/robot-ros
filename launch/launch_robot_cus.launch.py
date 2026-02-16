@@ -31,18 +31,18 @@ def generate_launch_description():
             }]
     )
 
-    # LIDAR RPLIDAR
-    lidar_node = Node(
-        package='rplidar_ros',
-        executable='rplidar_composition',
-        output='screen',
-        parameters=[{
-            'serial_port': '/dev/ttyUSB1',
-            'frame_id': 'laser_frame',
-            'angle_compensate': True,
-            'scan_mode': 'Standard'
-        }]
-    )
+    # # LIDAR RPLIDAR
+    # lidar_node = Node(
+    #     package='rplidar_ros',
+    #     executable='rplidar_composition',
+    #     output='screen',
+    #     parameters=[{
+    #         'serial_port': '/dev/ttyUSB1',
+    #         'frame_id': 'laser_frame',
+    #         'angle_compensate': True,
+    #         'scan_mode': 'Standard'
+    #     }]
+    # )
 
     #Rosbridge
     rosbridge_node = Node(
@@ -57,7 +57,7 @@ def generate_launch_description():
     # Launch them all!
     return LaunchDescription([
         rsp,
-        lidar_node,
+        # lidar_node,
         camera_node,
         rosbridge_node
     ])

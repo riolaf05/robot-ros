@@ -40,7 +40,13 @@ source ~/.bashrc
 # Colcon
 sudo apt install python3-colcon-common-extensions -y
 
-# Pacchetti essenziali (tutto insieme)
+# Librerie di sistema (IMPORTANTE: libserial-dev è richiesto!)
+sudo apt install -y \
+  libserial-dev \
+  python3-serial \
+  git
+
+# Pacchetti ROS2 essenziali (tutto insieme)
 sudo apt install -y \
   ros-humble-xacro \
   ros-humble-robot-state-publisher \
@@ -51,12 +57,12 @@ sudo apt install -y \
   ros-humble-rplidar-ros \
   ros-humble-v4l2-camera \
   ros-humble-rosbridge-server \
-  ros-humble-teleop-twist-keyboard \
-  python3-serial \
-  git
+  ros-humble-teleop-twist-keyboard
 ```
 
-## 3. Installa Serial e DiffDriveArduino (5 minuti)
+## 3. Clone e Build Workspace Completo (5 minuti)
+
+**⚠️ IMPORTANTE:** Tutti i package devono essere nello stesso workspace!
 
 ```bash
 # Crea workspace unificato
@@ -64,11 +70,14 @@ cd ~
 mkdir -p robot_ws/src
 cd robot_ws/src
 
-# Clona serial (dipendenza necessaria)
+# 1. Clona serial (dipendenza necessaria)
 git clone https://github.com/RoverRobotics-forks/serial-ros2.git serial
 
-# Clona diffdrive_arduino
+# 2. Clona diffdrive_arduino
 git clone https://github.com/joshnewans/diffdrive_arduino.git
+
+# 3. Clona il progetto robot_ros
+git clone https://github.com/riolaf05/robot-ros.git
 
 # Compila tutto insieme
 cd ~/robot_ws
@@ -77,18 +86,9 @@ echo "source ~/robot_ws/install/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-## 4. Clone e Build Progetto Robot (5 minuti)
+**Nota:** `libserial-dev` deve essere installato prima del build (fatto nello Step 2).
 
-```bash
-cd ~
-git clone https://github.com/riolaf05/robot-ros.git
-cd robot-ros
-colcon build --symlink-install
-echo "source ~/robot-ros/install/setup.bash" >> ~/.bashrc
-source ~/.bashrc
-```
-
-## 5. Configura Permessi (1 minuto)
+## 4. Configura Permessi (1 minuto)
 
 ```bash
 # Permessi seriale
@@ -98,7 +98,7 @@ sudo usermod -a -G dialout $USER
 sudo reboot
 ```
 
-## 6. Verifica Hardware (2 minuti)
+## 5. Verifica Hardware (2 minuti)
 
 ```bash
 # Dopo riavvio, riconnetti via SSH
@@ -107,14 +107,14 @@ sudo reboot
 ls -l /dev/ttyACM*
 # Dovrebbe mostrare:
 # /dev/ttyACM0 -> Arduino
-# /dev/ttyACM1 -> LIDAR
+# /dev/ttyACM1 -> LIDAR (o /dev/ttyUSB1)
 
 # Se diverse, aggiorna config:
-# Arduino: description/ros2_control.xacro
-# LIDAR: launch/launch_robot_cus.launch.py
+# Arduino: ~/robot_ws/src/robot-ros/description/ros2_control.xacro
+# LIDAR: ~/robot_ws/src/robot-ros/launch/launch_robot_cus.launch.py
 ```
 
-## 7. Test Arduino (1 minuto)
+## 6. Test Arduino (1 minuto)
 
 ```bash
 # Test comunicazione
@@ -130,7 +130,7 @@ minicom -D /dev/ttyACM0 -b 57600
 # Esci: Ctrl+A poi X
 ```
 
-## 8. Avvio Robot (1 minuto)
+## 7. Avvio Robot (1 minuto)
 
 ```bash
 # Avvia sistema completo
@@ -145,7 +145,7 @@ Dovresti vedere:
 [INFO] [rplidar_composition]: ...
 ```
 
-## 9. Test Movimento (1 minuto)
+## 8. Test Movimento (1 minuto)
 
 ```bash
 # In un NUOVO terminale SSH
@@ -154,7 +154,7 @@ ros2 topic pub /cmd_vel geometry_msgs/Twist "{linear: {x: 0.2}}" --once
 # Il robot dovrebbe muoversi in avanti!
 ```
 
-## 10. Controllo da Tastiera (FINALE!)
+## 9. Controllo da Tastiera (FINALE!)
 
 ```bash
 # In un nuovo terminale

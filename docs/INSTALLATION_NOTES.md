@@ -1,10 +1,27 @@
 # Note Importanti sull'Installazione
 
-## Serial e DiffDriveArduino - Workspace Unificato
+## Dipendenze di Sistema - libserial-dev
+
+### Requisito Critico
+
+**Prima di compilare il workspace**, devi installare la libreria di sistema `libserial-dev`:
+
+```bash
+sudo apt install -y libserial-dev python3-serial
+```
+
+**Errore se manca:**
+```
+fatal error: serial/serial.h: No such file or directory
+```
+
+`libserial-dev` fornisce le librerie C++ per la comunicazione seriale richieste dal package `serial-ros2`.
+
+## Serial, DiffDriveArduino e Robot Package - Workspace Unificato
 
 ### Problema Comune
 
-Quando si tenta di compilare `diffdrive_arduino` da solo, si ottiene questo errore:
+Quando si tenta di compilare `diffdrive_arduino` o `robot_ros` separatamente, si ottiene questo errore:
 
 ```
 CMake Error at CMakeLists.txt:15 (find_package):
@@ -15,23 +32,31 @@ CMake Error at CMakeLists.txt:15 (find_package):
 
 ### Causa
 
-`diffdrive_arduino` dipende dalla libreria `serial` (comunicazione seriale). CMake non riesce a trovare questa dipendenza se i due pacchetti sono in workspace separati.
+- `diffdrive_arduino` dipende dalla libreria `serial` (comunicazione seriale)
+- `robot_ros` dipende da `diffdrive_arduino`
+- CMake non riesce a trovare queste dipendenze se i pacchetti sono in workspace separati
 
 ### Soluzione Corretta ✅
 
-**Compilare entrambi i pacchetti nello stesso workspace:**
+**Compilare TUTTI i pacchetti nello stesso workspace:**
 
 ```bash
+# Installa dipendenza di sistema (PRIMA del build!)
+sudo apt install -y libserial-dev python3-serial
+
 # Crea workspace unificato
 cd ~
 mkdir -p robot_ws/src
 cd robot_ws/src
 
-# Clona serial (dipendenza)
+# 1. Clona serial (dipendenza base)
 git clone https://github.com/RoverRobotics-forks/serial-ros2.git serial
 
-# Clona diffdrive_arduino
+# 2. Clona diffdrive_arduino (dipende da serial)
 git clone https://github.com/joshnewans/diffdrive_arduino.git
+
+# 3. Clona robot_ros (dipende da diffdrive_arduino)
+git clone https://github.com/riolaf05/robot-ros.git
 
 # Compila tutto insieme
 cd ~/robot_ws
@@ -92,19 +117,15 @@ Quando `serial` e `diffdrive_arduino` sono nello **stesso workspace**:
 ## Struttura File Finale
 
 ```
-~/robot_ws/                    # Workspace unificato per dipendenze
+~/robot_ws/                    # Workspace unificato per TUTTO
   ├── src/
-  │   ├── serial/              # Libreria comunicazione seriale
-  │   └── diffdrive_arduino/   # Hardware interface
-  ├── build/
-  ├── install/
-  └── log/
-
-~/robot-ros/                   # Progetto robot principale
-  ├── src/
-  ├── launch/
-  ├── description/
-  ├── config/
+  │   ├── serial/              # 1. Libreria comunicazione seriale
+  │   ├── diffdrive_arduino/   # 2. Hardware interface (dipende da serial)
+  │   └── robot-ros/           # 3. Progetto robot (dipende da diffdrive_arduino)
+  │       ├── launch/
+  │       ├── description/
+  │       ├── config/
+  │       └── robot_ros/       # Python package
   ├── build/
   ├── install/
   └── log/
@@ -113,24 +134,27 @@ Quando `serial` e `diffdrive_arduino` sono nello **stesso workspace**:
 ## Ordine di Source nel .bashrc
 
 ```bash
-# Ordine corretto
+# Source ROS2 base
 source /opt/ros/humble/setup.bash
-source ~/robot_ws/install/setup.bash       # Serial + DiffDriveArduino
-source ~/robot-ros/install/setup.bash      # Progetto robot
+
+# Source workspace unificato (contiene tutto)
+source ~/robot_ws/install/setup.bash
 ```
+
+**Nota:** Non servono più workspace separati! Tutto è in `~/robot_ws`.
 
 ## Verifica Installazione
 
-Dopo aver compilato, verifica che entrambi i pacchetti siano disponibili:
+Dopo aver compilato, verifica che tutti i pacchetti siano disponibili:
 
 ```bash
-# Verifica serial
-ros2 pkg list | grep serial
-# Output atteso: serial
+# Verifica tutti i package
+ros2 pkg list | grep -E "(serial|diffdrive|robot_ros)"
 
-# Verifica diffdrive_arduino
-ros2 pkg list | grep diffdrive_arduino
-# Output atteso: diffdrive_arduino
+# Output atteso:
+# diffdrive_arduino
+# robot_ros
+# serial
 
 # Verifica plugin ros2_control
 ros2 control list_hardware_interfaces
@@ -157,6 +181,18 @@ Ci sono vari fork della libreria serial per ROS2. Questi sono i principali:
    - NON compatibile con ROS2
 
 ## Troubleshooting
+
+### Errore: "serial/serial.h: No such file or directory"
+
+**Causa:** Libreria di sistema `libserial-dev` non installata
+
+**Soluzione:**
+```bash
+sudo apt install -y libserial-dev python3-serial
+cd ~/robot_ws
+rm -rf build install log
+colcon build --symlink-install
+```
 
 ### Errore: "Could not find package 'serial'"
 
