@@ -135,6 +135,8 @@ ros2 --version
 
 ## Installazione Pacchetti ROS2
 
+> **⚠️ Nota Importante:** La libreria `serial` e `diffdrive_arduino` devono essere compilati insieme nello stesso workspace (sezione 4). Questa è una dipendenza critica per il funzionamento di ros2_control. Non tentare di installarli separatamente. Vedi [INSTALLATION_NOTES.md](INSTALLATION_NOTES.md) per dettagli tecnici.
+
 ### 1. Colcon (Build Tool)
 
 ```bash
@@ -162,18 +164,32 @@ sudo apt install -y \
   ros-humble-controller-manager
 ```
 
-### 4. DiffDriveArduino Hardware Interface
+### 4. Serial e DiffDriveArduino Hardware Interface
+
+**Importante:** DiffDriveArduino richiede la libreria `serial` come dipendenza. Devono essere compilati insieme nello stesso workspace.
 
 ```bash
+# Crea workspace unificato per serial e diffdrive_arduino
 cd ~
+mkdir -p robot_ws/src
+cd robot_ws/src
+
+# Clona serial (dipendenza necessaria)
+git clone https://github.com/RoverRobotics-forks/serial-ros2.git serial
+
+# Clona diffdrive_arduino
 git clone https://github.com/joshnewans/diffdrive_arduino.git
-cd diffdrive_arduino
-colcon build
-echo "source ~/diffdrive_arduino/install/setup.bash" >> ~/.bashrc
-source ~/.bashrc
+
+# Compila entrambi insieme
+cd ~/robot_ws
+colcon build --symlink-install
+
+# Source del workspace
+source install/setup.bash
+echo "source ~/robot_ws/install/setup.bash" >> ~/.bashrc
 ```
 
-**Importante:** Questo pacchetto fornisce l'hardware interface per comunicare con l'Arduino.
+**Nota:** La libreria `serial` è una dipendenza di `diffdrive_arduino` e deve essere nello stesso workspace per essere rilevata correttamente da CMake.
 
 ### 5. RPLIDAR Driver
 
@@ -463,18 +479,25 @@ ros2 run nav2_map_server map_saver_cli -f maps/nome_mappa
 
 ### Problema: Controller Manager non si avvia
 
-**Sintomi:** Errore "Failed to load controller"
+**Sintomi:** Errore "Failed to load controller" o "plugin diffdrive_arduino/DiffDriveArduino not found"
 
 **Soluzione:**
 ```bash
-# Verifica che diffdrive_arduino sia installato
+# Verifica che serial e diffdrive_arduino siano installati
+ros2 pkg list | grep serial
 ros2 pkg list | grep diffdrive_arduino
 
-# Se non c'è, reinstalla
-cd ~/diffdrive_arduino
-colcon build
+# Se non ci sono, reinstalla nel workspace unificato
+cd ~/robot_ws
+rm -rf build install log
+colcon build --symlink-install
 source install/setup.bash
+
+# Verifica che il plugin sia caricabile
+ros2 pkg list | grep diffdrive_arduino
 ```
+
+**Nota:** Se ricevi errori come "CMake Error: could not find package serial", assicurati che serial e diffdrive_arduino siano nello stesso workspace (~/robot_ws).
 
 ### Problema: Arduino non comunica
 

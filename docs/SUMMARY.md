@@ -123,6 +123,21 @@ Questo documento riassume tutte le modifiche apportate al progetto per implement
 - ✅ Note su encoder CPR
 - ✅ Troubleshooting collegamenti
 
+#### a-bis. Wiring Visual (NUOVO)
+**File:** `docs/WIRING_VISUAL.md` ⭐
+
+- ✅ Schemi visuali dettagliati pin-to-pin
+- ✅ Diagrammi ASCII art per ogni componente
+- ✅ Pinout completo Arduino Nano con legenda
+- ✅ Schema collegamenti L298N Motor Driver
+- ✅ Collegamenti Encoder con interrupt hardware
+- ✅ Sistema alimentazione completo (batteria, step-down, distribuzione)
+- ✅ Setup RPLIDAR con diagramma USB
+- ✅ **Checklist collegamento passo-passo** (10 fasi)
+- ✅ Troubleshooting visivo con LED di stato
+- ✅ Tabella verifiche con multimetro
+- ✅ Suggerimenti di sicurezza dettagliati
+
 #### b. Deployment Guide
 **File:** `docs/DEPLOYMENT.md`
 
@@ -150,9 +165,18 @@ Questo documento riassume tutte le modifiche apportate al progetto per implement
 #### d. README Principale
 **File:** `README.md`
 
-- ✅ Aggiunti link a WIRING.md
+- ✅ Aggiunti link a WIRING.md e WIRING_VISUAL.md
 - ✅ Aggiunti link a DEPLOYMENT.md
-- ✅ Breve descrizione di entrambe le guide
+- ✅ Breve descrizione di tutte le guide
+- ✅ Quick start con link a QUICKSTART.md
+
+#### e. Indice Documentazione (NUOVO)
+**File:** `docs/README.md` ⭐
+
+- ✅ Indice completo di tutta la documentazione
+- ✅ Percorsi consigliati per diversi utenti
+- ✅ Link rapidi per problemi comuni
+- ✅ Tabelle con specifiche hardware e software
 
 ## File Deprecati (Non Modificati, ma non più usati)
 
@@ -263,10 +287,13 @@ ros-humble-rosbridge-server
 ros-humble-teleop-twist-keyboard
 ```
 
-### Compilati da sorgente
+### Compilati da sorgente (Workspace ~/robot_ws)
 ```bash
+serial (da GitHub: RoverRobotics-forks/serial-ros2)
 diffdrive_arduino (da GitHub: joshnewans/diffdrive_arduino)
 ```
+
+**Nota importante:** `serial` e `diffdrive_arduino` devono essere compilati insieme nello stesso workspace (`~/robot_ws`) perché diffdrive_arduino dipende da serial. Non compilarli separatamente.
 
 ## Configurazione Hardware Finale
 
@@ -372,7 +399,7 @@ Prima del deploy finale:
 - [ ] Ubuntu 22.04 installato su Raspberry Pi
 - [ ] ROS2 Humble installato
 - [ ] Tutti i pacchetti necessari installati
-- [ ] diffdrive_arduino compilato
+- [ ] Workspace ~/robot_ws creato con serial e diffdrive_arduino compilati
 - [ ] Progetto robot-ros clonato e compilato
 - [ ] Porte seriali verificate (/dev/ttyUSB0, /dev/ttyUSB1)
 - [ ] Permessi seriale configurati (gruppo dialout)

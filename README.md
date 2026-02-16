@@ -7,14 +7,18 @@ Vuoi far partire il robot velocemente? Vedi [QUICKSTART.md](QUICKSTART.md) per u
 
 ## Wiring
 
-Vedi la guida completa: [docs/WIRING.md](docs/WIRING.md)
+**Guide disponibili:**
+- 🌐 **[docs/wiring-diagram.html](docs/wiring-diagram.html)** - **Schema Interattivo HTML** (⭐ Raccomandato - apri nel browser!)
+- 📘 [docs/WIRING.md](docs/WIRING.md) - Guida testuale completa con tabelle
+- 📋 [docs/WIRING_VISUAL.md](docs/WIRING_VISUAL.md) - Schemi visuali ASCII dettagliati pin-to-pin
 
 Schema collegamenti per:
-- Arduino Nano ↔ L298N Motor Driver
-- Arduino Nano ↔ Encoder Motori
-- L298N ↔ Motori DC
-- Arduino/LIDAR/Camera ↔ Raspberry Pi
-- Sistema di alimentazione completo
+- Arduino Nano ↔ L298N Motor Driver (pinout completo)
+- Arduino Nano ↔ Encoder Motori (con interrupt)
+- L298N ↔ Motori DC (con direzione)
+- Arduino/LIDAR/Camera ↔ Raspberry Pi (USB mapping)
+- Sistema di alimentazione completo (batteria, step-down)
+- Diagrammi ASCII art dettagliati per ogni componente
 
 ## Deployment
 

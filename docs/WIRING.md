@@ -2,6 +2,10 @@
 
 Questa guida descrive le connessioni hardware per il robot mobile con ROS2 Control.
 
+> 🎨 **Schema Interattivo HTML:** Apri [wiring-diagram.html](wiring-diagram.html) nel browser per una visualizzazione interattiva con colori e hover effects!
+>
+> 📘 **Schemi Dettagliati ASCII:** Vedi [WIRING_VISUAL.md](WIRING_VISUAL.md) per diagrammi ASCII completi con checklist passo-passo.
+
 ## Componenti Hardware Richiesti
 
 ### Componenti Principali
@@ -158,6 +162,8 @@ Step-Down GND → Pin 6 (GND)
 
 ## Schema Visuale Collegamenti
 
+### Schema Generale Semplificato
+
 ```
                     RASPBERRY PI 4
                     ┌─────────────┐
@@ -188,6 +194,174 @@ Step-Down GND → Pin 6 (GND)
                              5V
                              │
                           Rasp Pi
+```
+
+### Schema Dettagliato Pin-to-Pin
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                           ARDUINO NANO                              │
+│  ┌──────────────────────────────────────────────────────────────┐  │
+│  │ USB                                                      RST  │  │
+│  │  │                                                         │  │  │
+│  │  │  D13 D12 D11 D10 D9  D8  D7  D6  D5  D4  D3  D2       │  │  │
+│  │  │   │   │   │   │   │   │   │   │   │   │   │   │       │  │  │
+│  └──┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───────┴──┘  │
+│         │   │   │   │   │   │   │   │   │   │   │   │             │
+│         │   │   │   │   │   │   │   │   │   │   │   │             │
+│         │   │   │   │   │   │   │   │   │   │   │   │             │
+│      ┌──┘   │   │   │   │   │   │   │   │   │   │   └──┐          │
+│      │      │   │   │   │   │   │   │   │   │   │      │          │
+└──────┼──────┼───┼───┼───┼───┼───┼───┼───┼───┼───┼──────┼──────────┘
+       │      │   │   │   │   │   │   │   │   │   │      │
+       │      │   │   │   │   │   │   │   │   │   │      │
+       │      │   │   │   │   │   │   │   │   │   │      │
+       │      │   │   │   │   │   │   │   │   │   │      │
+    [GND]    │   │   │   │   │   │   │   │   │   │     [INT0]
+       │     │   │   │   │   │   │   │   │   │   │      │
+       │     │   │   │   │   │   │   │   │   │   │      │
+       ▼     ▼   ▼   ▼   ▼   ▼   ▼   ▼   ▼   ▼   ▼      ▼
+       │     │   │   │   │   │   │   │   │   │   │      │
+┌──────┴─────┴───┴───┴───┴───┴───┴───┴───┴───┴───┴──────┴──────────┐
+│                          L298N MOTOR DRIVER                        │
+│                                                                     │
+│  IN4  IN3  ENB  IN2  IN1  ENA  +12V GND                          │
+│   │    │    │    │    │    │     │   │                           │
+│   D11  D10  D9  D7   D6   D5    │   │                           │
+│                                  │   │                           │
+│  OUT3/OUT4             OUT1/OUT2 │   │                           │
+│      │                     │     │   │                           │
+│      │                     │     │   │                           │
+│      ▼                     ▼     ▼   ▼                           │
+│   ┌─────┐              ┌─────┐  │   │                           │
+│   │Motor│              │Motor│  │   │                           │
+│   │  R  │              │  L  │  │   │                           │
+│   └─────┘              └─────┘  │   │                           │
+│      │                     │     │   │                           │
+│      │                     │     │   │                           │
+└──────┼─────────────────────┼─────┼───┼───────────────────────────┘
+       │                     │     │   │
+       │   ┌─────────────┐   │     │   │
+       │   │   ENCODER   │   │     │   │
+       │   │   DESTRO    │   │     │   │
+       │   │  (Right)    │   │     │   │
+       │   ├─────────────┤   │     │   │
+       └──►│ Motor Shaft │   │     │   │
+           │             │   │     │   │
+           │ ChA  ChB    │   │     │   │
+           │  │    │     │   │     │   │
+           │  D3   D8    │   │     │   │
+           │  │    │     │   │     │   │
+           │  VCC  GND   │   │     │   │
+           │  │    │     │   │     │   │
+           └──┼────┼─────┘   │     │   │
+              │    │         │     │   │
+              │    │         │     │   │
+              │    │    ┌─────────────┐│
+              │    │    │   ENCODER   ││
+              │    │    │   SINISTRO  ││
+              │    │    │   (Left)    ││
+              │    │    ├─────────────┤│
+              │    │    │ Motor Shaft │◄┘
+              │    │    │             │
+              │    │    │ ChA  ChB    │
+              │    │    │  │    │     │
+              │    │    │  D2   D4    │
+              │    │    │  │    │     │
+              │    │    │  VCC  GND   │
+              │    │    │  │    │     │
+              │    │    └──┼────┼─────┘
+              │    │       │    │
+       ┌──────┼────┼───────┼────┼──────────────┐
+       │      │    │       │    │              │
+       │   [+5V]  [GND]  [+5V] [GND]          │
+       │      │    │       │    │              │
+       │      └────┴───────┴────┘              │
+       │       ALIMENTAZIONE ENCODER           │
+       │        (da Arduino Nano)              │
+       └──────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                        RASPBERRY PI 4 (Top View)                    │
+│                                                                      │
+│  ┌────────────────────────────────────────────────────────────┐    │
+│  │                                                              │    │
+│  │  USB1  USB2  USB3  USB4         Ethernet   HDMI  USB-C     │    │
+│  │   │     │     │     │              │         │      │       │    │
+│  └───┴─────┴─────┴─────┴──────────────┴─────────┴──────┴───────┘    │
+│      │     │     │     │                                             │
+│      │     │     │     └──────► Camera USB                          │
+│      │     │     │                                                   │
+│      │     │     └────────────► RPLIDAR (/dev/ttyUSB1)             │
+│      │     │                                                         │
+│      │     └──────────────────► (Libera)                            │
+│      │                                                               │
+│      └────────────────────────► Arduino Nano (/dev/ttyUSB0)        │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                         RPLIDAR A1/A2                               │
+│                                                                      │
+│                    ┌─────────────────┐                              │
+│                    │                 │                              │
+│                    │   LIDAR HEAD    │                              │
+│                    │   (Rotating)    │                              │
+│                    │                 │                              │
+│                    └────────┬────────┘                              │
+│                             │                                        │
+│                             │ Cable                                  │
+│                             │                                        │
+│                    ┌────────┴────────┐                              │
+│                    │  ADAPTER/USB    │                              │
+│                    │   CONTROLLER    │                              │
+│                    └─────────────────┘                              │
+│                             │                                        │
+│                             │ USB Cable                              │
+│                             │                                        │
+│                             └──────► Raspberry Pi USB Port          │
+│                                                                      │
+│  Note: LIDAR is powered via USB (5V). No external power needed.    │
+└──────────────────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                    SISTEMA DI ALIMENTAZIONE                         │
+│                                                                      │
+│                                                                      │
+│                    ┌──────────────┐                                 │
+│                    │  BATTERIA    │                                 │
+│                    │  12V LiPo    │                                 │
+│                    │  2200-5000mAh│                                 │
+│                    └──┬────────┬──┘                                 │
+│                       │        │                                     │
+│                      (+)      (-)                                    │
+│                       │        │                                     │
+│        ┌──────────────┘        └───────────────┐                    │
+│        │                                        │                    │
+│        │                                        │                    │
+│        ▼                                        ▼                    │
+│   ┌─────────┐                            ┌──────────┐               │
+│   │  L298N  │                            │ Step-Down│               │
+│   │ +12V IN │                            │ 12V→5V   │               │
+│   └─────────┘                            │ (3A min) │               │
+│        │                                  └────┬─────┘               │
+│        │                                       │                     │
+│        │ Alimenta Motori DC                    │ 5V Output           │
+│        │ (12V, 2-3A peak)                      │                     │
+│        │                                       │                     │
+│        └─► Motori L + R                        └─► Raspberry Pi 4   │
+│                                                     (USB-C o GPIO)   │
+│                                                                      │
+│  ⚠️  IMPORTANTE:                                                    │
+│  • Tutti i GND devono essere collegati insieme (ground comune)      │
+│  • Usa cavi adeguati (min 18AWG per motori, 20AWG per 5V)         │
+│  • Step-Down deve fornire almeno 3A per Raspberry Pi              │
+│  • Verifica polarità prima di alimentare!                          │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Tabella Pin Arduino Completa

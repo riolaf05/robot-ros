@@ -9,6 +9,8 @@ Guida rapida per far partire il robot in meno di 30 minuti (assumendo hardware g
 - ✅ Arduino Nano programmato
 - ✅ Batteria carica
 
+> **⚠️ Nota Importante:** `diffdrive_arduino` richiede la libreria `serial` come dipendenza. Devono essere compilati **insieme nello stesso workspace** (Step 3). Non tentare di installarli separatamente o riceverai errori CMake. Vedi [docs/INSTALLATION_NOTES.md](docs/INSTALLATION_NOTES.md) per dettagli.
+
 ## 1. Setup Raspberry Pi (10 minuti)
 
 ```bash
@@ -54,18 +56,28 @@ sudo apt install -y \
   git
 ```
 
-## 3. Installa DiffDriveArduino (5 minuti)
+## 3. Installa Serial e DiffDriveArduino (5 minuti)
 
 ```bash
+# Crea workspace unificato
 cd ~
+mkdir -p robot_ws/src
+cd robot_ws/src
+
+# Clona serial (dipendenza necessaria)
+git clone https://github.com/RoverRobotics-forks/serial-ros2.git serial
+
+# Clona diffdrive_arduino
 git clone https://github.com/joshnewans/diffdrive_arduino.git
-cd diffdrive_arduino
-colcon build
-echo "source ~/diffdrive_arduino/install/setup.bash" >> ~/.bashrc
+
+# Compila tutto insieme
+cd ~/robot_ws
+colcon build --symlink-install
+echo "source ~/robot_ws/install/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-## 4. Clone e Build Progetto (5 minuti)
+## 4. Clone e Build Progetto Robot (5 minuti)
 
 ```bash
 cd ~
@@ -92,10 +104,10 @@ sudo reboot
 # Dopo riavvio, riconnetti via SSH
 
 # Verifica porte seriali
-ls -l /dev/ttyUSB*
+ls -l /dev/ttyACM*
 # Dovrebbe mostrare:
-# /dev/ttyUSB0 -> Arduino
-# /dev/ttyUSB1 -> LIDAR
+# /dev/ttyACM0 -> Arduino
+# /dev/ttyACM1 -> LIDAR
 
 # Se diverse, aggiorna config:
 # Arduino: description/ros2_control.xacro
@@ -107,7 +119,7 @@ ls -l /dev/ttyUSB*
 ```bash
 # Test comunicazione
 sudo apt install minicom -y
-minicom -D /dev/ttyUSB0 -b 57600
+minicom -D /dev/ttyACM0 -b 57600
 
 # Digita: <e>
 # Aspetta: L:0,R:0
@@ -196,12 +208,18 @@ ros2 run nav2_map_server map_saver_cli -f ~/mia_mappa
 ### Problema: Controller non si avvia
 
 ```bash
-# Reinstalla diffdrive_arduino
-cd ~/diffdrive_arduino
+# Verifica pacchetti
+ros2 pkg list | grep serial
+ros2 pkg list | grep diffdrive_arduino
+
+# Se mancano, reinstalla workspace
+cd ~/robot_ws
 rm -rf build install log
-colcon build
+colcon build --symlink-install
 source install/setup.bash
 ```
+
+**Nota:** Se ricevi errori su "serial not found", vedi [docs/INSTALLATION_NOTES.md](docs/INSTALLATION_NOTES.md).
 
 ### Problema: Arduino non risponde
 

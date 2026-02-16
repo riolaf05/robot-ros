@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot ROS2 - Schema Collegamenti Hardware</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .tab.active {
+            background: white;
+            border-bottom: 3px solid #667eea;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .diagram-section {
+            display: none;
+        }
+
+        .diagram-section.active {
+            display: block;
+        }
+
+        .legend {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .legend h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid #333;
+        }
+
+        svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .component {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .component:hover {
+            opacity: 0.8;
+            filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.5));
+        }
+
+        .wire {
+            transition: all 0.3s;
+        }
+
+        .wire:hover {
+            stroke-width: 4;
+            filter: drop-shadow(0 0 5px currentColor);
+        }
+
+        .pin-label {
+            font-size: 12px;
+            fill: #333;
+            font-weight: bold;
+        }
+
+        .component-label {
+            font-size: 16px;
+            fill: #333;
+            font-weight: bold;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .checklist {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .checklist h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .checklist-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+            .tabs {
+                display: none;
+            }
+            .diagram-section {
+                display: block !important;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 Robot ROS2 - Schema Collegamenti Hardware</h1>
+            <p>Guida visuale interattiva per il wiring completo del robot mobile</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab(0)">📋 Overview</button>
+            <button class="tab" onclick="showTab(1)">🔌 Arduino → L298N</button>
+            <button class="tab" onclick="showTab(2)">📡 Arduino → Encoder</button>
+            <button class="tab" onclick="showTab(3)">⚡ Alimentazione</button>
+            <button class="tab" onclick="showTab(4)">💻 Raspberry Pi</button>
+            <button class="tab" onclick="showTab(5)">✅ Checklist</button>
+        </div>
+
+        <div class="content">
+            <!-- TAB 0: Overview -->
+            <div class="diagram-section active">
+                <h2>📋 Panoramica Sistema Completo</h2>
+
+                <div class="legend">
+                    <h3>Legenda Colori</h3>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ff6b6b;"></div>
+                            <span>Alimentazione +12V</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #4ecdc4;"></div>
+                            <span>Alimentazione +5V</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #333;"></div>
+                            <span>Ground (GND)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #95e1d3;"></div>
+                            <span>Segnali PWM</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #f38181;"></div>
+                            <span>Segnali Digitali</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #aa96da;"></div>
+                            <span>USB / Seriale</span>
+                        </div>
+                    </div>
+                </div>
+
+                <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Raspberry Pi -->
+                    <g class="component">
+                        <rect x="450" y="50" width="300" height="150" fill="#76c043" stroke="#333" stroke-width="3" rx="10"/>
+                        <text x="600" y="110" text-anchor="middle" class="component-label" fill="white">RASPBERRY PI 4</text>
+                        <text x="600" y="135" text-anchor="middle" font-size="12" fill="white">Ubuntu 22.04</text>
+                        <text x="600" y="155" text-anchor="middle" font-size="12" fill="white">ROS2 Humble</text>
+                    </g>
+
+                    <!-- Arduino Nano -->
+                    <g class="component">
+                        <rect x="150" y="300" width="200" height="100" fill="#00979d" stroke="#333" stroke-width="3" rx="10"/>
+                        <text x="250" y="340" text-anchor="middle" class="component-label" fill="white">ARDUINO NANO</text>
+                        <text x="250" y="365" text-anchor="middle" font-size="12" fill="white">ATmega328P</text>
+                    </g>
+
+                    <!-- L298N Motor Driver -->
+                    <g class="component">
+                        <rect x="450" y="450" width="250" height="120" fill="#e74c3c" stroke="#333" stroke-width="3" rx="10"/>
+                        <text x="575" y="495" text-anchor="middle" class="component-label" fill="white">L298N</text>
+                        <text x="575" y="520" text-anchor="middle" font-size="12" fill="white">Motor Driver</text>
+                    </g>
+
+                    <!-- Motori -->
+                    <g class="component">
+                        <circle cx="400" cy="680" r="50" fill="#95a5a6" stroke="#333" stroke-width="3"/>
+                        <text x="400" y="690" text-anchor="middle" class="component-label">Motor L</text>
+                    </g>
+                    <g class="component">
+                        <circle cx="750" cy="680" r="50" fill="#95a5a6" stroke="#333" stroke-width="3"/>
+                        <text x="750" y="690" text-anchor="middle" class="component-label">Motor R</text>
+                    </g>
+
+                    <!-- LIDAR -->
+                    <g class="component">
+                        <rect x="850" y="80" width="150" height="100" fill="#3498db" stroke="#333" stroke-width="3" rx="10"/>
+                        <text x="925" y="125" text-anchor="middle" class="component-label" fill="white">RPLIDAR</text>
+                        <text x="925" y="145" text-anchor="middle" font-size="12" fill="white">A1/A2</text>
+                    </g>
+
+                    <!-- Batteria -->
+                    <g class="component">
+                        <rect x="900" y="450" width="200" height="100" fill="#f39c12" stroke="#333" stroke-width="3" rx="10"/>
+                        <text x="1000" y="490" text-anchor="middle" class="component-label" fill="white">BATTERIA</text>
+                        <text x="1000" y="515" text-anchor="middle" font-size="12" fill="white">12V LiPo</text>
+                    </g>
+
+                    <!-- Collegamenti USB (Raspberry → Arduino) -->
+                    <line x1="500" y1="200" x2="280" y2="300" stroke="#aa96da" stroke-width="3" class="wire"/>
+                    <text x="390" y="240" font-size="12" fill="#aa96da">USB (Serial)</text>
+
+                    <!-- Collegamenti USB (Raspberry → LIDAR) -->
+                    <line x1="750" y1="125" x2="850" y2="125" stroke="#aa96da" stroke-width="3" class="wire"/>
+                    <text x="785" y="115" font-size="12" fill="#aa96da">USB</text>
+
+                    <!-- Collegamenti Arduino → L298N -->
+                    <path d="M 280,380 Q 380,420 480,480" stroke="#f38181" stroke-width="3" fill="none" class="wire"/>
+                    <text x="350" y="420" font-size="11" fill="#f38181">Control Signals</text>
+
+                    <!-- Collegamenti L298N → Motori -->
+                    <line x1="520" y1="570" x2="435" y2="650" stroke="#e74c3c" stroke-width="3" class="wire"/>
+                    <line x1="640" y1="570" x2="720" y2="650" stroke="#e74c3c" stroke-width="3" class="wire"/>
+
+                    <!-- Alimentazione (Batteria → L298N) -->
+                    <line x1="900" y1="500" x2="700" y2="500" stroke="#ff6b6b" stroke-width="4" class="wire"/>
+                    <text x="780" y="490" font-size="12" fill="#ff6b6b" font-weight="bold">+12V</text>
+
+                    <!-- Alimentazione (Batteria → Raspberry) -->
+                    <path d="M 1000,450 Q 900,300 750,150" stroke="#4ecdc4" stroke-width="4" fill="none" class="wire"/>
+                    <text x="850" y="280" font-size="12" fill="#4ecdc4" font-weight="bold">+5V (Step-Down)</text>
+
+                    <!-- Annotations -->
+                    <circle cx="250" cy="350" r="5" fill="#ffeb3b"/>
+                    <circle cx="575" cy="510" r="5" fill="#ffeb3b"/>
+                    <circle cx="600" cy="125" r="5" fill="#ffeb3b"/>
+                </svg>
+
+                <div class="info-box">
+                    <strong>ℹ️ Nota:</strong> Questo schema mostra i collegamenti principali. Clicca sulle tab in alto per vedere i dettagli di ogni connessione.
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ Attenzione:</strong> Verifica sempre la polarità dell'alimentazione prima di collegare la batteria. Un collegamento errato può danneggiare i componenti.
+                </div>
+            </div>
+
+            <!-- TAB 1: Arduino → L298N -->
+            <div class="diagram-section">
+                <h2>🔌 Collegamenti Arduino Nano → L298N Motor Driver</h2>
+
+                <svg viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Arduino Nano (sinistra) -->
+                    <g>
+                        <rect x="50" y="150" width="250" height="400" fill="#00979d" stroke="#333" stroke-width="3" rx="10"/>
+                        <text x="175" y="190" text-anchor="middle" class="component-label" fill="white">ARDUINO NANO</text>
+
+                        <!-- Pin labels Arduino -->
+                        <text x="320" y="240" class="pin-label">D5 (ENA)</text>
+                        <circle cx="310" cy="235" r="6" fill="#95e1d3"/>
+
+                        <text x="320" y="275" class="pin-label">D6 (IN1)</text>
+                        <circle cx="310" cy="270" r="6" fill="#f38181"/>
+
+                        <text x="320" y="310" class="pin-label">D7 (IN2)</text>
+                        <circle cx="310" cy="305" r="6" fill="#f38181"/>
+
+                        <text x="320" y="380" class="pin-label">D9 (ENB)</text>
+                        <circle cx="310" cy="375" r="6" fill="#95e1d3"/>
+
+                        <text x="320" y="415" class="pin-label">D10 (IN3)</text>
+                        <circle cx="310" cy="410" r="6" fill="#f38181"/>
+
+                        <text x="320" y="450" class="pin-label">D11 (IN4)</text>
+                        <circle cx="310" cy="445" r="6" fill="#f38181"/>
+
+                        <text x="320" y="500" class="pin-label">GND</text>
+                        <circle cx="310" cy="495" r="6" fill="#333"/>
+                    </g>
+
+                    <!-- L298N (destra) -->
+                    <g>
+                        <rect x="650" y="100" width="300" height="500" fill="#e74c3c" stroke="#333" stroke-width="3" rx="10"/>
+                        <text x="800" y="140" text-anchor="middle" class="component-label" fill="white">L298N MOTOR DRIVER</text>
+
+                        <!-- Pin labels L298N -->
+                        <text x="630" y="240" class="pin-label" text-anchor="end">ENA</text>
+                        <circle cx="640" cy="235" r="6" fill="#95e1d3"/>
+
+                        <text x="630" y="275" class="pin-label" text-anchor="end">IN1</text>
+                        <circle cx="640" cy="270" r="6" fill="#f38181"/>
+
+                        <text x="630" y="310" class="pin-label" text-anchor="end">IN2</text>
+                        <circle cx="640" cy="305" r="6" fill="#f38181"/>
+
+                        <text x="630" y="380" class="pin-label" text-anchor="end">ENB</text>
+                        <circle cx="640" cy="375" r="6" fill="#95e1d3"/>
+
+                        <text x="630" y="415" class="pin-label" text-anchor="end">IN3</text>
+                        <circle cx="640" cy="410" r="6" fill="#f38181"/>
+
+                        <text x="630" y="450" class="pin-label" text-anchor="end">IN4</text>
+                        <circle cx="640" cy="445" r="6" fill="#f38181"/>
+
+                        <text x="630" y="500" class="pin-label" text-anchor="end">GND</text>
+                        <circle cx="640" cy="495" r="6" fill="#333"/>
+
+                        <!-- Connettori motori -->
+                        <text x="800" y="580" text-anchor="middle" font-size="14" fill="white">OUT1/OUT2 → Motor L</text>
+                        <text x="800" y="600" text-anchor="middle" font-size="14" fill="white">OUT3/OUT4 → Motor R</text>
+                    </g>
+
+                    <!-- Collegamenti -->
+                    <line x1="310" y1="235" x2="640" y2="235" stroke="#95e1d3" stroke-width="3" class="wire" stroke-dasharray="5,5"/>
+                    <line x1="310" y1="270" x2="640" y2="270" stroke="#f38181" stroke-width="3" class="wire"/>
+                    <line x1="310" y1="305" x2="640" y2="305" stroke="#f38181" stroke-width="3" class="wire"/>
+                    <line x1="310" y1="375" x2="640" y2="375" stroke="#95e1d3" stroke-width="3" class="wire" stroke-dasharray="5,5"/>
+                    <line x1="310" y1="410" x2="640" y2="410" stroke="#f38181" stroke-width="3" class="wire"/>
+                    <line x1="310" y1="445" x2="640" y2="445" stroke="#f38181" stroke-width="3" class="wire"/>
+                    <line x1="310" y1="495" x2="640" y2="495" stroke="#333" stroke-width="4" class="wire"/>
+                </svg>
+
+                <div class="info-box">
+                    <strong>📌 Dettagli Connessioni:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>ENA/ENB (PWM):</strong> Controllano la velocità dei motori (0-255)</li>
+                        <li><strong>IN1/IN2:</strong> Controllano la direzione del motore sinistro</li>
+                        <li><strong>IN3/IN4:</strong> Controllano la direzione del motore destro</li>
+                        <li><strong>GND:</strong> Ground comune (ESSENZIALE)</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ Attenzione:</strong> Rimuovi il jumper del regolatore 5V sul L298N per evitare sovraccarichi!
+                </div>
+            </div>
+
+            <!-- TAB 2: Arduino → Encoder -->
+            <div class="diagram-section">
+                <h2>📡 Collegamenti Arduino Nano → Encoder</h2>
+
+                <svg viewBox="0 0 1100 600" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Arduino Nano (centro) -->
+                    <g>
+                        <rect x="400" y="150" width="300" height="300" fill="#00979d" stroke="#333" stroke-width="3" rx="10"/>
+                        <text x="550" y="190" text-anchor="middle" class="component-label" fill="white">ARDUINO NANO</text>
+
+                        <!-- Pin Encoder Sinistro -->
+                        <g>
+                            <circle cx="390" cy="250" r="6" fill="#4ecdc4"/>
+                            <text x="370" y="255" class="pin-label" text-anchor="end">5V</text>
+
+                            <circle cx="390" cy="280" r="6" fill="#333"/>
+                            <text x="370" y="285" class="pin-label" text-anchor="end">GND</text>
+
+                            <circle cx="390" cy="310" r="6" fill="#ff6b6b"/>
+                            <text x="370" y="315" class="pin-label" text-anchor="end">D2</text>
+
+                            <circle cx="390" cy="340" r="6" fill="#f38181"/>
+                            <text x="370" y="345" class="pin-label" text-anchor="end">D4</text>
+                        </g>
+
+                        <!-- Pin Encoder Destro -->
+                        <g>
+                            <circle cx="710" cy="250" r="6" fill="#4ecdc4"/>
+                            <text x="730" y="255" class="pin-label">5V</text>
+
+                            <circle cx="710" cy="280" r="6" fill="#333"/>
+                            <text x="730" y="285" class="pin-label">GND</text>
+
+                            <circle cx="710" cy="310" r="6" fill="#ff6b6b"/>
+                            <text x="730" y="315" class="pin-label">D3</text>
+
+                            <circle cx="710" cy="340" r="6" fill="#f38181"/>
+                            <text x="730" y="345" class="pin-label">D8</text>
+                        </g>
+                    </g>
+
+                    <!-- Encoder Sinistro -->
+                    <g>
+                        <rect x="50" y="200" width="200" height="200" fill="#34495e" stroke="#333" stroke-width="3" rx="10"/>
+                        <text x="150" y="235" text-anchor="middle" class="component-label" fill="white">ENCODER</text>
+                        <text x="150" y="255" text-anchor="middle" font-size="14" fill="white">SINISTRO</text>
+
+                        <circle cx="260" cy="280" r="6" fill="#4ecdc4"/>
+                        <text x="275" y="285" class="pin-label">VCC</text>
+
+                        <circle cx="260" cy="310" r="6" fill="#333"/>
+                        <text x="275" y="315" class="pin-label">GND</text>
+
+                        <circle cx="260" cy="340" r="6" fill="#ff6b6b"/>
+                        <text x="275" y="345" class="pin-label">Ch A</text>
+
+                        <circle cx="260" cy="370" r="6" fill="#f38181"/>
+                        <text x="275" y="375" class="pin-label">Ch B</text>
+                    </g>
+
+                    <!-- Encoder Destro -->
+                    <g>
+                        <rect x="850" y="200" width="200" height="200" fill="#34495e" stroke="#333" stroke-width="3" rx="10"/>
+                        <text x="950" y="235" text-anchor="middle" class="component-label" fill="white">ENCODER</text>
+                        <text x="950" y="255" text-anchor="middle" font-size="14" fill="white">DESTRO</text>
+
+                        <circle cx="840" cy="280" r="6" fill="#4ecdc4"/>
+                        <text x="820" y="285" class="pin-label" text-anchor="end">VCC</text>
+
+                        <circle cx="840" cy="310" r="6" fill="#333"/>
+                        <text x="820" y="315" class="pin-label" text-anchor="end">GND</text>
+
+                        <circle cx="840" cy="340" r="6" fill="#ff6b6b"/>
+                        <text x="820" y="345" class="pin-label" text-anchor="end">Ch A</text>
+
+                        <circle cx="840" cy="370" r="6" fill="#f38181"/>
+                        <text x="820" y="375" class="pin-label" text-anchor="end">Ch B</text>
+                    </g>
+
+                    <!-- Collegamenti Encoder Sinistro -->
+                    <line x1="260" y1="280" x2="390" y2="250" stroke="#4ecdc4" stroke-width="3" class="wire"/>
+                    <line x1="260" y1="310" x2="390" y2="280" stroke="#333" stroke-width="3" class="wire"/>
+                    <line x1="260" y1="340" x2="390" y2="310" stroke="#ff6b6b" stroke-width="3" class="wire" stroke-dasharray="5,5"/>
+                    <line x1="260" y1="370" x2="390" y2="340" stroke="#f38181" stroke-width="3" class="wire"/>
+
+                    <!-- Collegamenti Encoder Destro -->
+                    <line x1="840" y1="280" x2="710" y2="250" stroke="#4ecdc4" stroke-width="3" class="wire"/>
+                    <line x1="840" y1="310" x2="710" y2="280" stroke="#333" stroke-width="3" class="wire"/>
+                    <line x1="840" y1="340" x2="710" y2="310" stroke="#ff6b6b" stroke-width="3" class="wire" stroke-dasharray="5,5"/>
+                    <line x1="840" y1="370" x2="710" y2="340" stroke="#f38181" stroke-width="3" class="wire"/>
+
+                    <!-- Labels -->
+                    <text x="550" y="520" text-anchor="middle" font-size="14" fill="#ff6b6b" font-weight="bold">Ch A (tratteggiato) = Pin Interrupt (D2, D3)</text>
+                    <text x="550" y="550" text-anchor="middle" font-size="14" fill="#f38181" font-weight="bold">Ch B = Pin lettura direzione (D4, D8)</text>
+                </svg>
+
+                <div class="info-box">
+                    <strong>📌 Importante Encoder:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>Channel A:</strong> DEVE essere collegato ai pin interrupt (D2, D3)</li>
+                        <li><strong>Channel B:</strong> Usato per determinare la direzione di rotazione</li>
+                        <li><strong>VCC:</strong> Alimentazione 5V dall'Arduino</li>
+                        <li><strong>CPR:</strong> Configurare nel codice Arduino (default: 374)</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ Attenzione:</strong> Verifica la polarità VCC/GND dell'encoder. Un collegamento errato può danneggiare l'encoder!
+                </div>
+            </div>
+
+            <!-- TAB 3: Alimentazione -->
+            <div class="diagram-section">
+                <h2>⚡ Sistema di Alimentazione</h2>
+
+                <svg viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Batteria -->
+                    <g>
+                        <rect x="400" y="50" width="200" height="120" fill="#f39c12" stroke="#333" stroke-width="3" rx="10"/>
+                        <text x="500" y="95" text-anchor="middle" class="component-label" fill="white">BATTERIA</text>
+                        <text x="500" y="120" text-anchor="middle" font-size="14" fill="white">12V LiPo 3S</text>
+                        <text x="500" y="140" text-anchor="middle" font-size="12" fill="white">2200-5000mAh</text>
+
+                        <!-- Terminali batteria -->
+                        <circle cx="450" cy="180" r="8" fill="#ff6b6b"/>
+                        <text x="450" y="200" text-anchor="middle" font-size="12" fill="#ff6b6b" font-weight="bold">+12V</text>
+
+                        <circle cx="550" cy="180" r="8" fill="#333"/>
+                        <text x="550" y="200" text-anchor="middle" font-size="12" fill="#333" font-weight="bold">GND</text>
+                    </g>
+
+                    <!-- L298N (sinistra) -->
+                    <g>
+                        <rect x="200" y="300" width="200" height="150" fill="#e74c3c" stroke="#333" stroke-width="3" rx="10"/>
+                        <text x="300" y="340" text-anchor="middle" class="component-label" fill="white">L298N</text>
+                        <text x="300" y="365" text-anchor="middle" font-size="12" fill="white">12V Motor Power</text>
+
+                        <circle cx="300" cy="290" r="6" fill="#ff6b6b"/>
+                        <text x="300" y="280" text-anchor="middle" font-size="11" font-weight="bold">+12V</text>
+
+                        <circle cx="340" cy="290" r="6" fill="#333"/>
+                        <text x="340" y="280" text-anchor="middle" font-size="11" font-weight="bold">GND</text>
+
+                        <!-- Output motori -->
+                        <text x="300" y="410" text-anchor="middle" font-size="12" fill="white">→ Motori L+R</text>
+                        <text x="300" y="430" text-anchor="middle" font-size="11" fill="white">(12V, 2-3A)</text>
+                    </g>
+
+                    <!-- Step-Down Converter (destra) -->
+                    <g>
+                        <rect x="600" y="300" width="200" height="150" fill="#3498db" stroke="#333" stroke-width="3" rx="10"/>
+                        <text x="700" y="340" text-anchor="middle" class="component-label" fill="white">STEP-DOWN</text>
+                        <text x="700" y="365" text-anchor="middle" font-size="12" fill="white">12V → 5V</text>
+                        <text x="700" y="385" text-anchor="middle" font-size="11" fill="white">(Min 3A)</text>
+
+                        <circle cx="660" cy="290" r="6" fill="#ff6b6b"/>
+                        <text x="660" y="280" text-anchor="middle" font-size="11" font-weight="bold">IN+</text>
+
+                        <circle cx="740" cy="290" r="6" fill="#333"/>
+                        <text x="740" y="280" text-anchor="middle" font-size="11" font-weight="bold">IN-</text>
+
+                        <circle cx="660" cy="460" r="6" fill="#4ecdc4"/>
+                        <text x="660" y="475" text-anchor="middle" font-size="11" font-weight="bold">OUT+</text>
+
+                        <circle cx="740" cy="460" r="6" fill="#333"/>
+                        <text x="740" y="475" text-anchor="middle" font-size="11" font-weight="bold">OUT-</text>
+                    </g>
+
+                    <!-- Raspberry Pi -->
+                    <g>
+                        <rect x="550" y="550" width="300" height="100" fill="#76c043" stroke="#333" stroke-width="3" rx="10"/>
+                        <text x="700" y="590" text-anchor="middle" class="component-label" fill="white">RASPBERRY PI 4</text>
+                        <text x="700" y="615" text-anchor="middle" font-size="12" fill="white">5V @ 3A</text>
+
+                        <circle cx="700" cy="540" r="6" fill="#4ecdc4"/>
+                        <text x="700" y="530" text-anchor="middle" font-size="11" font-weight="bold">5V</text>
+                    </g>
+
+                    <!-- Collegamenti Alimentazione -->
+                    <!-- Batteria → L298N -->
+                    <line x1="450" y1="180" x2="300" y2="290" stroke="#ff6b6b" stroke-width="5" class="wire"/>
+                    <line x1="550" y1="180" x2="340" y2="290" stroke="#333" stroke-width="5" class="wire"/>
+
+                    <!-- Batteria → Step-Down -->
+                    <line x1="450" y1="180" x2="660" y2="290" stroke="#ff6b6b" stroke-width="5" class="wire"/>
+                    <line x1="550" y1="180" x2="740" y2="290" stroke="#333" stroke-width="5" class="wire"/>
+
+                    <!-- Step-Down → Raspberry -->
+                    <line x1="660" y1="460" x2="700" y2="540" stroke="#4ecdc4" stroke-width="5" class="wire"/>
+                    <line x1="740" y1="460" x2="740" y2="600" stroke="#333" stroke-width="5" class="wire"/>
+
+                    <!-- Arrows -->
+                    <defs>
+                        <marker id="arrowred" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#ff6b6b" />
+                        </marker>
+                        <marker id="arrowblue" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#4ecdc4" />
+                        </marker>
+                    </defs>
+
+                    <!-- Labels potenza -->
+                    <text x="360" y="235" font-size="13" fill="#ff6b6b" font-weight="bold">12V @ 2-3A</text>
+                    <text x="520" y="235" font-size="13" fill="#ff6b6b" font-weight="bold">12V</text>
+                    <text x="680" y="505" font-size="13" fill="#4ecdc4" font-weight="bold">5V @ 3A</text>
+                </svg>
+
+                <div class="warning-box">
+                    <strong>⚠️ IMPORTANTE - Sicurezza Alimentazione:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>Ground Comune:</strong> TUTTI i GND devono essere collegati insieme</li>
+                        <li><strong>Polarità:</strong> Verifica 3 volte prima di alimentare</li>
+                        <li><strong>Step-Down:</strong> Impostare esattamente a 5.0V (±0.1V)</li>
+                        <li><strong>Cavi:</strong> Min 18AWG per motori, 20AWG per 5V</li>
+                        <li><strong>L298N Jumper:</strong> Rimuovere il jumper 5V regulator</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <strong>📊 Consumo di Corrente Stimato:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>Raspberry Pi 4: 2.5-3A @ 5V</li>
+                        <li>Arduino Nano: 200mA @ 5V (via USB da Raspberry)</li>
+                        <li>RPLIDAR: 400-500mA @ 5V (via USB da Raspberry)</li>
+                        <li>Motori DC: 1-2A each @ 12V (peak 2-3A)</li>
+                        <li>Encoder: 50mA each @ 5V</li>
+                    </ul>
+                    <strong>Totale: ~15W @ 5V + 24-36W @ 12V (peak)</strong>
+                </div>
+            </div>
+
+            <!-- TAB 4: Raspberry Pi -->
+            <div class="diagram-section">
+                <h2>💻 Raspberry Pi 4 - Collegamenti</h2>
+
+                <svg viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Raspberry Pi -->
+                    <g>
+                        <rect x="300" y="150" width="400" height="300" fill="#76c043" stroke="#333" stroke-width="3" rx="15"/>
+                        <text x="500" y="200" text-anchor="middle" class="component-label" fill="white" font-size="20">RASPBERRY PI 4</text>
+
+                        <!-- Porte USB -->
+                        <g>
+                            <rect x="320" y="260" width="80" height="40" fill="#2c3e50" stroke="#333" stroke-width="2" rx="5"/>
+                            <text x="360" y="285" text-anchor="middle" font-size="12" fill="white">USB 1</text>
+                            <circle cx="360" cy="250" r="5" fill="#aa96da"/>
+
+                            <rect x="420" y="260" width="80" height="40" fill="#2c3e50" stroke="#333" stroke-width="2" rx="5"/>
+                            <text x="460" y="285" text-anchor="middle" font-size="12" fill="white">USB 2</text>
+                            <circle cx="460" cy="250" r="5" fill="#aa96da"/>
+
+                            <rect x="520" y="260" width="80" height="40" fill="#2c3e50" stroke="#333" stroke-width="2" rx="5"/>
+                            <text x="560" y="285" text-anchor="middle" font-size="12" fill="white">USB 3</text>
+                            <circle cx="560" cy="250" r="5" fill="#aa96da"/>
+
+                            <rect x="620" y="260" width="80" height="40" fill="#2c3e50" stroke="#333" stroke-width="2" rx="5"/>
+                            <text x="660" y="285" text-anchor="middle" font-size="12" fill="white">USB 4</text>
+                            <circle cx="660" cy="250" r="5" fill="#aa96da"/>
+                        </g>
+
+                        <!-- USB-C Power -->
+                        <rect x="320" y="370" width="100" height="50" fill="#2c3e50" stroke="#333" stroke-width="2" rx="5"/>
+                        <text x="370" y="400" text-anchor="middle" font-size="12" fill="white">USB-C</text>
+                        <text x="370" y="415" text-anchor="middle" font-size="10" fill="white">Power</text>
+                        <circle cx="370" cy="430" r="5" fill="#4ecdc4"/>
+                    </g>
+
+                    <!-- Arduino Nano -->
+                    <g>
+                        <rect x="100" y="100" width="120" height="80" fill="#00979d" stroke="#333" stroke-width="2" rx="8"/>
+                        <text x="160" y="135" text-anchor="middle" font-size="13" fill="white" font-weight="bold">Arduino</text>
+                        <text x="160" y="150" text-anchor="middle" font-size="11" fill="white">Nano</text>
+                        <circle cx="160" cy="190" r="5" fill="#aa96da"/>
+                    </g>
+
+                    <!-- RPLIDAR -->
+                    <g>
+                        <rect x="780" y="100" width="120" height="80" fill="#3498db" stroke="#333" stroke-width="2" rx="8"/>
+                        <text x="840" y="135" text-anchor="middle" font-size="13" fill="white" font-weight="bold">RPLIDAR</text>
+                        <text x="840" y="150" text-anchor="middle" font-size="11" fill="white">A1/A2</text>
+                        <circle cx="840" cy="190" r="5" fill="#aa96da"/>
+                    </g>
+
+                    <!-- Camera -->
+                    <g>
+                        <rect x="430" y="30" width="120" height="60" fill="#7f8c8d" stroke="#333" stroke-width="2" rx="8"/>
+                        <text x="490" y="55" text-anchor="middle" font-size="13" fill="white" font-weight="bold">Camera</text>
+                        <text x="490" y="70" text-anchor="middle" font-size="11" fill="white">USB</text>
+                        <circle cx="490" cy="100" r="5" fill="#aa96da"/>
+                    </g>
+
+                    <!-- Power Supply -->
+                    <g>
+                        <rect x="100" y="350" width="150" height="80" fill="#3498db" stroke="#333" stroke-width="2" rx="8"/>
+                        <text x="175" y="385" text-anchor="middle" font-size="13" fill="white" font-weight="bold">Step-Down</text>
+                        <text x="175" y="405" text-anchor="middle" font-size="11" fill="white">5V @ 3A</text>
+                        <circle cx="175" cy="440" r="5" fill="#4ecdc4"/>
+                    </g>
+
+                    <!-- Collegamenti USB -->
+                    <path d="M 160,190 Q 250,220 360,250" stroke="#aa96da" stroke-width="4" fill="none" class="wire"/>
+                    <text x="240" y="210" font-size="12" fill="#aa96da" font-weight="bold">/dev/ttyUSB0</text>
+
+                    <path d="M 840,190 Q 750,220 660,250" stroke="#aa96da" stroke-width="4" fill="none" class="wire"/>
+                    <text x="740" y="210" font-size="12" fill="#aa96da" font-weight="bold">/dev/ttyUSB1</text>
+
+                    <path d="M 490,100 L 560,250" stroke="#aa96da" stroke-width="4" fill="none" class="wire"/>
+                    <text x="510" y="165" font-size="12" fill="#aa96da" font-weight="bold">/dev/video0</text>
+
+                    <!-- Collegamento Power -->
+                    <path d="M 175,440 Q 250,435 370,430" stroke="#4ecdc4" stroke-width="5" fill="none" class="wire"/>
+                    <text x="260" y="425" font-size="12" fill="#4ecdc4" font-weight="bold">5V Power</text>
+                </svg>
+
+                <div class="info-box">
+                    <strong>📌 Mapping Porte:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>/dev/ttyUSB0:</strong> Arduino Nano (comunicazione seriale a 57600 baud)</li>
+                        <li><strong>/dev/ttyUSB1:</strong> RPLIDAR (comunicazione seriale + alimentazione)</li>
+                        <li><strong>/dev/video0:</strong> Camera USB (v4l2_camera)</li>
+                        <li><strong>Power:</strong> 5V tramite USB-C o GPIO Pin 4 (con cautela)</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ Note Importanti:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>Le porte USB potrebbero cambiare ordine. Verifica con <code>ls -l /dev/ttyUSB*</code></li>
+                        <li>Arduino DEVE essere su /dev/ttyUSB0 (configurato in ros2_control.xacro)</li>
+                        <li>Se le porte sono invertite, scambia i cavi USB o modifica la configurazione</li>
+                        <li>Raspberry Pi 4 richiede almeno 3A @ 5V per funzionare stabilmente</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- TAB 5: Checklist -->
+            <div class="diagram-section">
+                <h2>✅ Checklist Collegamento</h2>
+
+                <div class="checklist">
+                    <h3>Fase 1: Preparazione</h3>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check1">
+                        <label for="check1">Verifica di avere tutti i componenti</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check2">
+                        <label for="check2">Prepara cavi dupont maschio-femmina</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check3">
+                        <label for="check3">Testa step-down converter (imposta 5.0V)</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check4">
+                        <label for="check4">Verifica polarità batteria</label>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <h3>Fase 2: Collegamenti Arduino → L298N</h3>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check5">
+                        <label for="check5">GND Arduino → GND L298N</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check6">
+                        <label for="check6">D5 → ENA (Enable Motor L)</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check7">
+                        <label for="check7">D6 → IN1, D7 → IN2 (Motor L)</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check8">
+                        <label for="check8">D9 → ENB (Enable Motor R)</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check9">
+                        <label for="check9">D10 → IN3, D11 → IN4 (Motor R)</label>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <h3>Fase 3: Collegamenti Encoder</h3>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check10">
+                        <label for="check10">Encoder L: VCC → 5V, GND → GND</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check11">
+                        <label for="check11">Encoder L: ChA → D2, ChB → D4</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check12">
+                        <label for="check12">Encoder R: VCC → 5V, GND → GND</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check13">
+                        <label for="check13">Encoder R: ChA → D3, ChB → D8</label>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <h3>Fase 4: Collegamenti Motori</h3>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check14">
+                        <label for="check14">Motor L → L298N OUT1/OUT2</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check15">
+                        <label for="check15">Motor R → L298N OUT3/OUT4</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check16">
+                        <label for="check16">Encoder montati su alberi motori</label>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <h3>Fase 5: Alimentazione</h3>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check17">
+                        <label for="check17">Batteria (+) → L298N +12V</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check18">
+                        <label for="check18">Batteria (-) → L298N GND</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check19">
+                        <label for="check19">Batteria → Step-Down Input</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check20">
+                        <label for="check20">Step-Down Output (5V) → Raspberry Pi</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check21">
+                        <label for="check21">⚠️ Verifica: TUTTI i GND collegati insieme</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check22">
+                        <label for="check22">⚠️ Rimosso jumper 5V regulator su L298N</label>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <h3>Fase 6: Collegamenti USB</h3>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check23">
+                        <label for="check23">Arduino Nano USB → Raspberry Pi</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check24">
+                        <label for="check24">RPLIDAR USB → Raspberry Pi</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check25">
+                        <label for="check25">Camera USB → Raspberry Pi (opzionale)</label>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <h3>Fase 7: Verifica Finale</h3>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check26">
+                        <label for="check26">Verifica visiva di tutti i collegamenti</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check27">
+                        <label for="check27">Misura output step-down: 5.0V ±0.1V</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check28">
+                        <label for="check28">Verifica continuità GND con multimetro</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check29">
+                        <label for="check29">Verifica assenza cortocircuiti</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check30">
+                        <label for="check30">⚠️ Robot sollevato (ruote non toccano terra)</label>
+                    </div>
+                </div>
+
+                <div class="warning-box" style="margin-top: 30px;">
+                    <strong>🔥 PRIMA DI ACCENDERE:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>✅ Tutti i collegamenti verificati 3 volte</li>
+                        <li>✅ Polarità corretta su batteria e step-down</li>
+                        <li>✅ Multimetro mostra 5.0V su step-down output</li>
+                        <li>✅ Robot sollevato per primo test</li>
+                        <li>✅ Piano di emergenza (interruttore/scollegare batteria)</li>
+                    </ul>
+                </div>
+
+                <button onclick="printChecklist()" style="background: #667eea; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-size: 16px; cursor: pointer; margin-top: 20px;">
+                    🖨️ Stampa Checklist
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        function showTab(index) {
+            const tabs = document.querySelectorAll('.tab');
+            const sections = document.querySelectorAll('.diagram-section');
+
+            tabs.forEach((tab, i) => {
+                if (i === index) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            sections.forEach((section, i) => {
+                if (i === index) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+        }
+
+        // Hover effects per componenti
+        document.querySelectorAll('.component').forEach(component => {
+            component.addEventListener('mouseenter', function(e) {
+                const tooltip = document.getElementById('tooltip');
+                const text = this.querySelector('text');
+                if (text) {
+                    tooltip.textContent = text.textContent;
+                    tooltip.style.opacity = '1';
+                }
+            });
+
+            component.addEventListener('mousemove', function(e) {
+                const tooltip = document.getElementById('tooltip');
+                tooltip.style.left = (e.pageX + 10) + 'px';
+                tooltip.style.top = (e.pageY + 10) + 'px';
+            });
+
+            component.addEventListener('mouseleave', function() {
+                const tooltip = document.getElementById('tooltip');
+                tooltip.style.opacity = '0';
+            });
+        });
+
+        // Print checklist
+        function printChecklist() {
+            window.print();
+        }
+
+        // Save checklist state
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            const id = checkbox.id;
+            const saved = localStorage.getItem(id);
+            if (saved === 'true') {
+                checkbox.checked = true;
+            }
+
+            checkbox.addEventListener('change', function() {
+                localStorage.setItem(id, this.checked);
+            });
+        });
+    </script>
+</body>
+</html>
